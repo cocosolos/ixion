@@ -1,0 +1,30 @@
+services:
+    api:
+        build: .
+        command: gunicorn api.wsgi:application --bind 0.0.0.0:8000
+        restart: always
+        volumes:
+            - .:/app
+        ports:
+            - 8000:8000
+        depends_on:
+            - redis
+    celery:
+        build: .
+        command: celery -A api worker -l info
+        restart: always
+        volumes:
+            - .:/app
+        depends_on:
+            - redis
+    celery-beat:
+        build: .
+        command: celery -A api beat -l info
+        restart: always
+        volumes:
+            - .:/app
+        depends_on:
+            - redis
+    redis:
+        image: redis:alpine
+        restart: always

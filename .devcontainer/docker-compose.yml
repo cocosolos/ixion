@@ -1,0 +1,63 @@
+services:
+  workspace:
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
+    image: ixion-dev:latest
+    command: sleep infinity
+    volumes:
+      - /var/run/docker.sock:/var/run/docker-host.sock
+      - ixion-dev-node_modules:/workspace/client/node_modules
+      - ixion-dev-static:/workspace/api/static
+      - ..:/workspace:cached
+  client:
+    image: ixion-dev:latest
+    working_dir: /workspace/client
+    command: npm run dev
+    volumes:
+      - ixion-dev-node_modules:/workspace/client/node_modules
+      - ../client:/workspace/client:cached
+    ports:
+      - 3000:3000
+    depends_on:
+      - workspace
+      - api
+  api:
+    image: ixion-dev:latest
+    working_dir: /workspace/api
+    entrypoint: /workspace/api/entrypoint.sh
+    command: python manage.py runserver 0.0.0.0:8000
+    environment:
+      - DEBUG=true
+    volumes:
+      - ixion-dev-static:/workspace/api/static
+      - ../api:/workspace/api:cached
+    ports:
+      - 8000:8000
+    depends_on:
+      - workspace
+      - redis
+  celery:
+    image: ixion-dev:latest
+    working_dir: /workspace/api
+    command: celery -A api worker -l info
+    volumes:
+      - ../api:/workspace/api:cached
+    depends_on:
+      - workspace
+      - redis
+  celery-beat:
+    image: ixion-dev:latest
+    working_dir: /workspace/api
+    command: celery -A api beat -l info
+    volumes:
+      - ../api:/workspace/api:cached
+    depends_on:
+      - workspace
+      - redis
+  redis:
+    image: redis:alpine
+
+volumes:
+  ixion-dev-node_modules:
+  ixion-dev-static:

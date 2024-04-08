@@ -1,0 +1,75 @@
+{
+  "name": "Ixion",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "workspace",
+  "containerEnv": {
+    "GIT_EDITOR": "code --wait"
+  },
+  "workspaceFolder": "/workspace",
+  "postCreateCommand": "git config --global --add safe.directory /workspace",
+  "shutdownAction": "stopCompose",
+  "forwardPorts": [8000, 3000],
+  "portsAttributes": {
+    "8000": {
+      "label": "api"
+    },
+    "3000": {
+      "label": "client"
+    }
+  },
+  "features": {
+    "ghcr.io/devcontainers/features/docker-outside-of-docker:latest": {}
+  },
+  "mounts": [
+    "source=vscode-extensions,target=/root/.vscode-server/extensions,type=volume",
+  ],
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "EditorConfig.EditorConfig",
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "formulahendry.auto-rename-tag",
+        "idered.npm",
+        "christian-kohler.npm-intellisense",
+        "xabikos.JavaScriptSnippets",
+        "dsznajder.es7-react-js-snippets",
+        "eamodio.gitlens",
+        "donjayamanne.githistory",
+        "humao.rest-client",
+        "ms-azuretools.vscode-docker",
+        "bradlc.vscode-tailwindcss",
+        "christian-kohler.path-intellisense",
+        "csstools.postcss",
+        // api
+        "ms-python.black-formatter",
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "batisteo.vscode-django"
+      ],
+      "settings": {
+        "[python]": {
+          "editor.defaultFormatter": "ms-python.black-formatter"
+        },
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.formatOnSave": true,
+        "eslint.format.enable": true,
+        "eslint.lintTask.enable": true,
+        "eslint.workingDirectories": ["./client"],
+        "eslint.validate": [
+          "javascript",
+          "javascriptreact",
+          "typescript",
+          "typescriptreact"
+        ],
+        "editor.codeActionsOnSave": {
+          "source.organizeImports": "explicit",
+          "source.fixAll.eslint": "explicit"
+        },
+        "tailwindCSS.includeLanguages": {
+          "plaintext": "javascript"
+        }
+      }
+    }
+  }
+}
