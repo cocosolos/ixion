@@ -1,17 +1,7 @@
 from rest_framework import viewsets, mixins
 from django.db.models.fields.json import KT
-from v1.serializers.server import ServerSerializer
+from v1.serializers.server import ServerDetailsSerializer, ServerSerializer
 from v1.models.server import Server
-
-
-class ServerView(
-    mixins.CreateModelMixin,
-    mixins.RetrieveModelMixin,
-    mixins.ListModelMixin,
-    viewsets.GenericViewSet,
-):
-    serializer_class = ServerSerializer
-    queryset = Server.objects.all()
 
 
 class ServerViewSet(
@@ -27,14 +17,6 @@ class ServerViewSet(
         "name": {
             "annotate_field": "settings__MAIN.SERVER_NAME",
             "filter_type": "startswith",
-        },
-        "level_cap_min": {
-            "annotate_field": "settings__MAIN.MAX_LEVEL",
-            "filter_type": "gte",
-        },
-        "level_cap_max": {
-            "annotate_field": "settings__MAIN.MAX_LEVEL",
-            "filter_type": "lte",
         },
     }
 
@@ -58,3 +40,11 @@ class ServerViewSet(
         queryset._result_cache = None
 
         return queryset
+
+
+class ServerDetailsViewSet(
+    mixins.RetrieveModelMixin,
+    viewsets.GenericViewSet,
+):
+    queryset = Server.objects.all()
+    serializer_class = ServerDetailsSerializer

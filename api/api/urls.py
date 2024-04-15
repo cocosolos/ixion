@@ -18,12 +18,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
-from v1.views import server
+from v1.views.server import ServerViewSet, ServerDetailsViewSet
 
 router = routers.DefaultRouter()
-router.register(r"servers", server.ServerViewSet, "v1")
+router.register(r"servers", ServerViewSet, basename="servers")
+router.register(r"server", ServerDetailsViewSet, basename="server")
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("v1/", include(router.urls)),
+    path("", include(router.urls)),
 ]

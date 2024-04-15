@@ -75,7 +75,6 @@ export default function Header({
             sx={{
               color: 'inherit',
               textDecoration: 'none',
-              userSelect: 'none',
               flexGrow: 1,
             }}
           >

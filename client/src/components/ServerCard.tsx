@@ -1,4 +1,6 @@
 import {
+  Check,
+  Close,
   ContentCopy,
   ExpandMore,
   Launch,
@@ -10,13 +12,9 @@ import {
   Box,
   Card,
   CardContent,
+  Chip,
   Divider,
   IconButton,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableRow,
   ToggleButton,
   ToggleButtonGroup,
   Tooltip,
@@ -25,7 +23,11 @@ import {
 } from '@mui/material';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import ServerData, { ServerSettingsInfo } from '../data/ServerData';
+import ServerData, {
+  ServerSetting,
+  ServerSettingsInfo,
+} from '../data/ServerData';
+import CopyImageIcon from '../images/copy-image.png';
 import { Accordion, AccordionDetails, AccordionSummary } from './Accordion';
 
 export default function ServerCard({ server }: { server: ServerData }) {
@@ -63,14 +65,74 @@ export default function ServerCard({ server }: { server: ServerData }) {
   };
 
   function formatExternalUrl(url: string): string {
-    // Check if the URL starts with a valid protocol
+    // prepend 'https://' to the URL if it's not already there
     if (!/^https?:\/\//i.test(url)) {
-      // If not, prepend 'https://' to the URL
       return `https://${url}`;
     }
-    // Otherwise, return the original URL
     return url;
   }
+
+  const renderSettingsChip = ([key, value]: [
+    string,
+    boolean | string | number,
+  ]) => {
+    if (!ServerSettingsInfo[key]) return null;
+
+    const transformValue = (
+      v: boolean | string | number,
+      setting: ServerSetting
+    ): string | number | boolean => {
+      return setting.transform?.(v) ?? v;
+    };
+
+    let chipValue: string | number | boolean | JSX.Element = transformValue(
+      value,
+      ServerSettingsInfo[key]
+    );
+    if (typeof chipValue === 'boolean') {
+      chipValue = chipValue ? (
+        <Check color="success" />
+      ) : (
+        <Close color="error" />
+      );
+    }
+
+    return (
+      <Tooltip
+        arrow
+        disableInteractive
+        title={ServerSettingsInfo[key].description}
+      >
+        <Chip
+          key={key}
+          label={`${ServerSettingsInfo[key].name === '' ? key : ServerSettingsInfo[key].name}`}
+          avatar={
+            typeof chipValue === 'object' ? undefined : (
+              <Chip label={chipValue} size="small" />
+            )
+          }
+          icon={typeof chipValue === 'object' ? chipValue : undefined}
+          size="small"
+          className="m-1 pr-1"
+          sx={{
+            '& .MuiChip-avatar': {
+              width: 'auto',
+              marginX: 0,
+              order: 2,
+            },
+            '& .MuiChip-icon': {
+              marginX: 0,
+              order: 2,
+            },
+            '&> .MuiChip-label': {
+              paddingRight: 0.5,
+            },
+            boxShadow: '0px 3px 3px rgba(0, 0, 0, .25)',
+          }}
+        />
+      </Tooltip>
+    );
+  };
 
   const expansions = [
     <ToggleButton
@@ -125,7 +187,7 @@ export default function ServerCard({ server }: { server: ServerData }) {
       <Accordion className="my-0">
         <AccordionSummary expandIcon={<ExpandMore />}>
           <Box className="flex items-center justify-center">
-            {server.settings['LOGIN.MAINT_MODE'] === 1 ? (
+            {server.customizations['LOGIN.MAINT_MODE'] === 1 ? (
               <Tooltip
                 arrow
                 disableInteractive
@@ -158,14 +220,16 @@ export default function ServerCard({ server }: { server: ServerData }) {
                 color={(theme) => alpha(theme.palette.text.primary, 0.87)}
                 sx={{ lineHeight: 1.0 }}
               >
-                {server.settings['MAIN.SERVER_NAME']}
+                {server.name}
               </Typography>
-              {typeof server.settings['API.WEBSITE'] === 'string' &&
-                server.settings['API.WEBSITE'] !== '' && (
+              {typeof server.customizations['API.WEBSITE'] === 'string' &&
+                server.customizations['API.WEBSITE'] !== '' && (
                   <Tooltip arrow disableInteractive title="Visit website.">
                     <IconButton
                       component={Link}
-                      to={formatExternalUrl(server.settings['API.WEBSITE'])}
+                      to={formatExternalUrl(
+                        server.customizations['API.WEBSITE']
+                      )}
                       target="_blank"
                       rel="noopener"
                       size="small"
@@ -225,11 +289,12 @@ export default function ServerCard({ server }: { server: ServerData }) {
             <ToggleButtonGroup
               size="small"
               value={[
-                server.settings['LOGIN.RISE_OF_ZILART'] && 'rotz',
-                server.settings['LOGIN.CHAINS_OF_PROMATHIA'] && 'cop',
-                server.settings['LOGIN.TREASURES_OF_AHT_URGHAN'] && 'toau',
-                server.settings['LOGIN.WINGS_OF_THE_GODDESS'] && 'wotg',
-                server.settings['LOGIN.SEEKERS_OF_ADOULIN'] && 'soa',
+                server.customizations['LOGIN.RISE_OF_ZILART'] && 'rotz',
+                server.customizations['LOGIN.CHAINS_OF_PROMATHIA'] && 'cop',
+                server.customizations['LOGIN.TREASURES_OF_AHT_URGHAN'] &&
+                  'toau',
+                server.customizations['LOGIN.WINGS_OF_THE_GODDESS'] && 'wotg',
+                server.customizations['LOGIN.SEEKERS_OF_ADOULIN'] && 'soa',
               ]}
               sx={{ '& button': { lineHeight: 1.0 } }}
             >
@@ -241,95 +306,57 @@ export default function ServerCard({ server }: { server: ServerData }) {
               variant="h5"
               color={(theme) => theme.palette.text.secondary}
             >
-              {`Lv.${server.settings['MAIN.MAX_LEVEL']}`}
+              {`Lv.${server.max_level}`}
             </Typography>
           </Box>
         </AccordionSummary>
         <AccordionDetails className="p-2">
-          <TableContainer>
-            <Table size="small">
-              <TableBody>
-                <TableRow>
-                  <TableCell>
-                    <Tooltip
-                      title={
-                        ServerSettingsInfo['LOGIN.LOGIN_LIMIT'].description
-                      }
-                      arrow
-                      disableInteractive
-                    >
-                      <Typography variant="caption" sx={{ userSelect: 'none' }}>
-                        {`${ServerSettingsInfo['LOGIN.LOGIN_LIMIT'].name}: `}
-                        {server.settings['LOGIN.LOGIN_LIMIT'] === 0
-                          ? 'unlimited'
-                          : server.settings['LOGIN.LOGIN_LIMIT']}
-                      </Typography>
-                    </Tooltip>
-                  </TableCell>
-                  <TableCell>
-                    <Tooltip
-                      title={
-                        ServerSettingsInfo['MAIN.ENABLE_TRUST_CASTING']
-                          .description
-                      }
-                      arrow
-                      disableInteractive
-                    >
-                      <Typography variant="caption" sx={{ userSelect: 'none' }}>
-                        {`${ServerSettingsInfo['MAIN.ENABLE_TRUST_CASTING'].name}: `}
-                        {server.settings['MAIN.ENABLE_TRUST_CASTING'] === 1
-                          ? 'Enabled'
-                          : 'Disabled'}
-                      </Typography>
-                    </Tooltip>
-                  </TableCell>
-                  <TableCell>
-                    <Tooltip
-                      title={
-                        ServerSettingsInfo['MAP.LEVEL_SYNC_ENABLE'].description
-                      }
-                      arrow
-                      disableInteractive
-                    >
-                      <Typography variant="caption" sx={{ userSelect: 'none' }}>
-                        {`${ServerSettingsInfo['MAP.LEVEL_SYNC_ENABLE'].name}: `}
-                        {server.settings['MAP.LEVEL_SYNC_ENABLE']
-                          ? 'Enabled'
-                          : 'Disabled'}
-                      </Typography>
-                    </Tooltip>
-                  </TableCell>
-                </TableRow>
-                <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
-                  <TableCell>
-                    <Tooltip
-                      title={ServerSettingsInfo['MAP.SPEED_MOD'].description}
-                      arrow
-                      disableInteractive
-                    >
-                      <Typography variant="caption" sx={{ userSelect: 'none' }}>
-                        {`${ServerSettingsInfo['MAP.SPEED_MOD'].name}: `}
-                        {typeof server.settings['MAP.SPEED_MOD'] === 'number'
-                          ? (server.settings['MAP.SPEED_MOD'] < 0 ? '' : '+') +
-                            ((50 + server.settings['MAP.SPEED_MOD']) / 50 - 1) *
-                              100
-                          : '???'}
-                        %
-                      </Typography>
-                    </Tooltip>
-                  </TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-          </TableContainer>
+          {server.customizations['MAIN.SERVER_MESSAGE'] && (
+            <>
+              <Box className="flex justify-center">
+                <Typography variant="body2">
+                  {server.customizations['MAIN.SERVER_MESSAGE']}
+                </Typography>
+              </Box>
+              <Divider sx={{ marginY: 1 }} />
+            </>
+          )}
+          <Box
+            sx={{
+              display: 'flex',
+              flexWrap: 'wrap',
+              justifyContent: 'center',
+              maxWidth: '100%',
+            }}
+          >
+            {Object.entries(server.customizations).map(renderSettingsChip)}
+          </Box>
         </AccordionDetails>
       </Accordion>
       <Divider />
       <CardContent className="flex justify-between py-1">
-        <Typography variant="caption" sx={{ userSelect: 'none' }}>
+        <Typography variant="caption">
           {server.active_sessions} active sessions
+          {server.login_limit !== 1 && (
+            <Tooltip
+              title={`Server allows ${server.login_limit === 0 ? 'unlimited' : server.login_limit} simultaneous game sessions per IP.`}
+              arrow
+              disableInteractive
+            >
+              <img
+                src={CopyImageIcon}
+                alt=""
+                style={{
+                  maxHeight: '1.5em',
+                  marginLeft: '0.5em',
+                  verticalAlign: 'middle',
+                }}
+                onContextMenu={(event) => event.preventDefault()}
+              />
+            </Tooltip>
+          )}
         </Typography>
-        <Typography variant="caption" sx={{ userSelect: 'none' }}>
+        <Typography variant="caption">
           Updated: {new Date(server.updated).toLocaleString()}
         </Typography>
       </CardContent>

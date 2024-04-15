@@ -17,6 +17,7 @@ services:
     volumes:
       - ixion-dev-node_modules:/workspace/client/node_modules
       - ../client:/workspace/client:cached
+      - ../api:/workspace/api:cached
     ports:
       - 3000:3000
     depends_on:
@@ -32,6 +33,7 @@ services:
     volumes:
       - ixion-dev-static:/workspace/api/static
       - ../api:/workspace/api:cached
+      - ../client:/workspace/client:cached
     ports:
       - 8000:8000
     depends_on:

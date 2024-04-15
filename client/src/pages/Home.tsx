@@ -45,30 +45,26 @@ export default function Home({
   }, [setAlertInfo, setServers]);
 
   const filterServers = (server: ServerData): boolean => {
-    if (
-      searchState.name.value.length > 0 &&
-      typeof server.settings['MAIN.SERVER_NAME'] === 'string'
-    ) {
-      const serverName = server.settings['MAIN.SERVER_NAME'].toLowerCase();
+    if (searchState.name.value.length > 0) {
+      const serverName = server.name.toLowerCase();
       if (!serverName.includes(searchState.name.value.toLowerCase())) {
         return false;
       }
     }
 
-    if (typeof server.settings['MAIN.MAX_LEVEL'] === 'number') {
-      if (server.settings['MAIN.MAX_LEVEL'] < searchState.maxLevel.value[0]) {
-        return false;
-      }
-      if (server.settings['MAIN.MAX_LEVEL'] > searchState.maxLevel.value[1]) {
-        return false;
-      }
+    if (server.max_level < searchState.maxLevel.value[0]) {
+      return false;
+    }
+    if (server.max_level > searchState.maxLevel.value[1]) {
+      return false;
     }
 
     if (
       searchState.trusts.value &&
-      typeof server.settings['MAIN.ENABLE_TRUST_CASTING'] === 'number'
+      typeof server.customizations['MAIN.ENABLE_TRUST_CASTING'] === 'number'
     ) {
-      const serverTrusts = server.settings['MAIN.ENABLE_TRUST_CASTING'] === 1;
+      const serverTrusts =
+        server.customizations['MAIN.ENABLE_TRUST_CASTING'] === 1;
       const searchEnabled = searchState.trusts.value.includes('enabled');
       const searchDisabled = searchState.trusts.value.includes('disabled');
       if (serverTrusts && searchDisabled && !searchEnabled) {
@@ -81,9 +77,9 @@ export default function Home({
 
     if (
       searchState.levelSync.value &&
-      typeof server.settings['MAP.LEVEL_SYNC_ENABLE'] === 'boolean'
+      typeof server.customizations['MAP.LEVEL_SYNC_ENABLE'] === 'boolean'
     ) {
-      const serverLevelSync = server.settings['MAP.LEVEL_SYNC_ENABLE'];
+      const serverLevelSync = server.customizations['MAP.LEVEL_SYNC_ENABLE'];
       const searchEnabled = searchState.levelSync.value.includes('enabled');
       const searchDisabled = searchState.levelSync.value.includes('disabled');
       if (serverLevelSync && searchDisabled && !searchEnabled) {
@@ -98,19 +94,19 @@ export default function Home({
       const searchNoneEnabled = searchState.expansions.value.includes('none');
       const searchRotzEnabled = searchState.expansions.value.includes('rotz');
       const serverRotzEnabled =
-        server.settings['LOGIN.RISE_OF_ZILART'] === true;
+        server.customizations['LOGIN.RISE_OF_ZILART'] === true;
       const searchCopEnabled = searchState.expansions.value.includes('cop');
       const serverCopEnabled =
-        server.settings['LOGIN.CHAINS_OF_PROMATHIA'] === true;
+        server.customizations['LOGIN.CHAINS_OF_PROMATHIA'] === true;
       const searchToauEnabled = searchState.expansions.value.includes('toau');
       const serverToauEnabled =
-        server.settings['LOGIN.TREASURES_OF_AHT_URGHAN'] === true;
+        server.customizations['LOGIN.TREASURES_OF_AHT_URGHAN'] === true;
       const searchWotgEnabled = searchState.expansions.value.includes('wotg');
       const serverWotgEnabled =
-        server.settings['LOGIN.WINGS_OF_THE_GODDESS'] === true;
+        server.customizations['LOGIN.WINGS_OF_THE_GODDESS'] === true;
       const searchSoaEnabled = searchState.expansions.value.includes('soa');
       const serverSoaEnabled =
-        server.settings['LOGIN.SEEKERS_OF_ADOULIN'] === true;
+        server.customizations['LOGIN.SEEKERS_OF_ADOULIN'] === true;
       if (
         searchNoneEnabled &&
         (serverRotzEnabled ||
@@ -139,27 +135,22 @@ export default function Home({
     }
 
     if (searchState.multibox.value) {
-      const serverMultibox = server.settings['LOGIN.LOGIN_LIMIT'];
-      if (typeof serverMultibox === 'number') {
-        if (
-          searchState.multibox.value.includes('none') &&
-          serverMultibox !== 1
-        ) {
-          return false;
-        }
-        if (
-          searchState.multibox.value.includes('unlimited') &&
-          serverMultibox !== 0
-        ) {
-          return false;
-        }
-        if (
-          searchState.multibox.value.includes('limited') &&
-          !searchState.multibox.value.includes('unlimited') &&
-          serverMultibox < 2
-        ) {
-          return false;
-        }
+      const serverMultibox = server.login_limit;
+      if (searchState.multibox.value.includes('none') && serverMultibox !== 1) {
+        return false;
+      }
+      if (
+        searchState.multibox.value.includes('unlimited') &&
+        serverMultibox !== 0
+      ) {
+        return false;
+      }
+      if (
+        searchState.multibox.value.includes('limited') &&
+        !searchState.multibox.value.includes('unlimited') &&
+        serverMultibox < 2
+      ) {
+        return false;
       }
     }
 

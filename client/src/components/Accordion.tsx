@@ -30,7 +30,7 @@ export const AccordionSummary = styled((props: AccordionSummaryProps) => (
   '& .MuiAccordionSummary-content': {
     margin: theme.spacing(0),
   },
-  boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)', // Adjust the size and opacity as needed
+  boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
   minHeight: '32px',
 }));
 
