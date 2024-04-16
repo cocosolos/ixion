@@ -31,19 +31,19 @@ import CopyImageIcon from '../images/copy-image.png';
 
 interface KeyValueRow {
   id: number;
+  key: string;
+  rawValue: string | number | boolean;
   name: string;
   value: string | number | boolean;
   description: string;
-  key: string;
-  rawValue: string | number | boolean;
 }
 
 const columns: GridColDef[] = [
-  { field: 'name', headerName: 'Name', flex: 2 },
-  { field: 'value', headerName: 'Value', flex: 1 },
-  { field: 'description', headerName: 'Description', flex: 4 },
-  { field: 'key', headerName: 'Key', flex: 1 },
-  { field: 'rawValue', headerName: 'Raw Value', flex: 1 },
+  { field: 'key', headerName: 'Key', flex: 4, align: 'right' },
+  { field: 'rawValue', headerName: 'Raw Value', flex: 1, align: 'left' },
+  { field: 'name', headerName: 'Name', flex: 3, align: 'right' },
+  { field: 'value', headerName: 'Value', flex: 1, align: 'left' },
+  { field: 'description', headerName: 'Description', flex: 6 },
 ];
 
 function ServerSettingsDataGrid({
@@ -60,14 +60,14 @@ function ServerSettingsDataGrid({
   const rows: KeyValueRow[] = Object.entries(serverSettings).map(
     ([key, value], index) => ({
       id: index + 1,
+      key,
+      rawValue: value,
       name: ServerSettingsInfo[key]?.name || '',
       value:
         (ServerSettingsInfo[key] &&
           transformValue(value, ServerSettingsInfo[key]).toString()) ||
         '',
       description: ServerSettingsInfo[key]?.description || '',
-      key,
-      rawValue: value,
     })
   );
 
@@ -80,7 +80,8 @@ function ServerSettingsDataGrid({
         autoHeight
         density="compact"
         hideFooterSelectedRowCount
-        showCellVerticalBorder
+        showColumnVerticalBorder
+        getRowHeight={() => 'auto'}
         initialState={{
           sorting: {
             sortModel: [{ field: 'name', sort: 'asc' }],
@@ -90,10 +91,17 @@ function ServerSettingsDataGrid({
               items: [{ field: 'name', operator: 'isNotEmpty' }],
             },
           },
+          columns: {
+            columnVisibilityModel: {
+              key: false,
+              rawValue: false,
+            },
+          },
         }}
         sx={{
           '& .MuiDataGrid-cell': {
             userSelect: 'text',
+            py: 1,
           },
         }}
       />
