@@ -10,6 +10,7 @@ import {
   styled,
 } from '@mui/material';
 import { useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { postData } from '../apiUtil';
 import ServerData from '../data/ServerData';
 import { AlertResponse } from './Alert';
@@ -51,6 +52,7 @@ export default function AddServer({
   servers: ServerData[];
   setServers: React.Dispatch<React.SetStateAction<ServerData[]>>;
 }) {
+  const navigate = useNavigate();
   const containerRef = useRef<HTMLElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -71,6 +73,7 @@ export default function AddServer({
           severity: 'success',
         });
         if (response.data && typeof response.data === 'object') {
+          navigate(`/server/${response.data.id}`);
           setServers([response.data, ...servers]);
         }
         if (inputRef.current) {

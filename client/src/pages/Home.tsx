@@ -1,6 +1,6 @@
 import { Box } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { fetchData, fetchDemo } from '../apiUtil';
+import { fetchData } from '../apiUtil';
 import { AlertResponse } from '../components/Alert';
 import ErrorCard from '../components/ErrorCard';
 import ServerCard from '../components/ServerCard';
@@ -35,9 +35,7 @@ export default function Home({
           setError('An unknown error occurred.');
         }
       }
-      if (data.length === 0) {
-        data.push(await fetchDemo());
-      }
+
       setServers(data);
     };
 
@@ -161,7 +159,7 @@ export default function Home({
 
   return (
     <Box>
-      {error ? (
+      {error || filteredServers.length === 0 ? (
         <ErrorCard error={error} />
       ) : (
         filteredServers.map((server: ServerData) => (

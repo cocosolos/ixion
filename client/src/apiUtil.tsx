@@ -21,9 +21,9 @@ export const fetchDemo = async () => {
   }
 };
 
-export const fetchData = async (queryParams = {}) => {
+export const fetchData = async (dir = 'servers', queryParams = {}) => {
   const queryString = new URLSearchParams(queryParams).toString();
-  const url = `${import.meta.env.PROD ? 'https://api.ixion.dev' : 'http://localhost:8000'}/servers/${queryString ? `?${queryString}` : ''}`;
+  const url = `${import.meta.env.PROD ? 'https://api.ixion.dev' : 'http://localhost:8000'}/${dir}/${queryString ? `?${queryString}` : ''}`;
   try {
     const response = await fetch(url, {
       signal: AbortSignal.timeout(5000),

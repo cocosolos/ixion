@@ -10,7 +10,7 @@ import {
 import IconButton from '@mui/material/IconButton';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { fetchData, fetchDemo } from '../apiUtil';
+import { fetchData } from '../apiUtil';
 import SearchState from '../data/SearchState';
 import ServerData from '../data/ServerData';
 import AddServer from './AddServer';
@@ -52,11 +52,6 @@ export default function Header({
         });
       }
     }
-    setFetchLoading(50);
-    if (data.length === 0) {
-      data.push(await fetchDemo());
-    }
-    setFetchLoading(75);
     setServers(data);
     setFetchLoading(100);
     setTimeout(() => {

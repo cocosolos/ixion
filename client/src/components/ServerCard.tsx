@@ -3,6 +3,7 @@ import {
   Close,
   ContentCopy,
   ExpandMore,
+  Info,
   Launch,
   Public,
   PublicOff,
@@ -15,8 +16,6 @@ import {
   Chip,
   Divider,
   IconButton,
-  ToggleButton,
-  ToggleButtonGroup,
   Tooltip,
   Typography,
   alpha,
@@ -29,6 +28,11 @@ import ServerData, {
 } from '../data/ServerData';
 import CopyImageIcon from '../images/copy-image.png';
 import { Accordion, AccordionDetails, AccordionSummary } from './Accordion';
+import ExpansionBar from './ExpansionsBar';
+
+function scrollToTop() {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
 
 export default function ServerCard({ server }: { server: ServerData }) {
   const [clipboardTooltip, setClipboardTooltip] = useState('Copy server URL.');
@@ -48,7 +52,7 @@ export default function ServerCard({ server }: { server: ServerData }) {
       handleClipboardTooltipOpen();
       setTimeout(() => {
         handleClipboardTooltipClose();
-        setClipboardTooltip('Copy Server URL.');
+        setClipboardTooltip('Copy server URL.');
       }, 3000);
     } catch (error) {
       handleClipboardTooltipOpen();
@@ -59,7 +63,7 @@ export default function ServerCard({ server }: { server: ServerData }) {
       }
       setTimeout(() => {
         handleClipboardTooltipClose();
-        setClipboardTooltip('Copy Server URL.');
+        setClipboardTooltip('Copy server URL.');
       }, 3000);
     }
   };
@@ -133,54 +137,6 @@ export default function ServerCard({ server }: { server: ServerData }) {
       </Tooltip>
     );
   };
-
-  const expansions = [
-    <ToggleButton
-      key="rotz"
-      value="rotz"
-      aria-label="rotz-enabled"
-      className="py-0"
-      disabled
-    >
-      RotZ
-    </ToggleButton>,
-    <ToggleButton
-      key="cop"
-      value="cop"
-      aria-label="cop-enabled"
-      className="py-0"
-      disabled
-    >
-      CoP
-    </ToggleButton>,
-    <ToggleButton
-      key="toau"
-      value="toau"
-      aria-label="toau-enabled"
-      className="py-0"
-      disabled
-    >
-      ToAU
-    </ToggleButton>,
-    <ToggleButton
-      key="wotg"
-      value="wotg"
-      aria-label="wotg-enabled"
-      className="py-0"
-      disabled
-    >
-      WotG
-    </ToggleButton>,
-    <ToggleButton
-      key="soa"
-      value="soa"
-      aria-label="soa-enabled"
-      className="py-0"
-      disabled
-    >
-      SoA
-    </ToggleButton>,
-  ];
 
   return (
     <Card className="mb-2">
@@ -286,20 +242,7 @@ export default function ServerCard({ server }: { server: ServerData }) {
                 </Tooltip>
               )}
             </Box>
-            <ToggleButtonGroup
-              size="small"
-              value={[
-                server.customizations['LOGIN.RISE_OF_ZILART'] && 'rotz',
-                server.customizations['LOGIN.CHAINS_OF_PROMATHIA'] && 'cop',
-                server.customizations['LOGIN.TREASURES_OF_AHT_URGHAN'] &&
-                  'toau',
-                server.customizations['LOGIN.WINGS_OF_THE_GODDESS'] && 'wotg',
-                server.customizations['LOGIN.SEEKERS_OF_ADOULIN'] && 'soa',
-              ]}
-              sx={{ '& button': { lineHeight: 1.0 } }}
-            >
-              {expansions}
-            </ToggleButtonGroup>
+            <ExpansionBar server={server} />
           </CardContent>
           <Box className="flex items-center justify-center">
             <Typography
@@ -334,8 +277,8 @@ export default function ServerCard({ server }: { server: ServerData }) {
         </AccordionDetails>
       </Accordion>
       <Divider />
-      <CardContent className="flex justify-between py-1">
-        <Typography variant="caption">
+      <CardContent className="flex justify-between py-0">
+        <Typography variant="caption" className="flex items-center">
           {server.active_sessions} active sessions
           {server.login_limit !== 1 && (
             <Tooltip
@@ -356,7 +299,18 @@ export default function ServerCard({ server }: { server: ServerData }) {
             </Tooltip>
           )}
         </Typography>
-        <Typography variant="caption">
+        <Typography variant="caption" className="flex items-center">
+          <Tooltip title="View full settings." arrow disableInteractive>
+            <IconButton
+              component={Link}
+              to={`/server/${server.id}`}
+              onClick={scrollToTop}
+              className="p-0"
+              disableRipple
+            >
+              <Info className="p-1" />
+            </IconButton>
+          </Tooltip>
           Updated: {new Date(server.updated).toLocaleString()}
         </Typography>
       </CardContent>

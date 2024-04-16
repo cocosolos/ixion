@@ -7,7 +7,7 @@ export interface ServerSetting {
   transform?: (arg: boolean | string | number) => boolean | string | number;
 }
 
-interface ServerSettings {
+export interface ServerSettings {
   [key: string]: boolean | string | number;
 }
 
@@ -16,6 +16,7 @@ export default interface ServerData {
   name: string;
   url: string;
   max_level: number;
+  settings?: ServerSettings;
   customizations: ServerSettings;
   login_limit: number;
   active_sessions: number;
@@ -28,9 +29,16 @@ export const DemoServerData: ServerData = {
   name: 'LandSandBoat Demo',
   url: 'github.com/LandSandBoat/server',
   max_level: 99,
+  settings: LsbDefaults,
   customizations: {
-    ...LsbDefaults,
     'API.WEBSITE': 'https://landsandboat.github.io/server/',
+    'MAIN.ENABLE_TRUST_CASTING': 1,
+    'MAP.LEVEL_SYNC_ENABLE': true,
+    'LOGIN.RISE_OF_ZILART': true,
+    'LOGIN.CHAINS_OF_PROMATHIA': true,
+    'LOGIN.TREASURES_OF_AHT_URGHAN': true,
+    'LOGIN.WINGS_OF_THE_GODDESS': true,
+    'LOGIN.SEEKERS_OF_ADOULIN': true,
   },
   login_limit: 0,
   active_sessions: 0,

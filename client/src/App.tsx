@@ -9,6 +9,7 @@ import ServerData from './data/ServerData';
 import About from './pages/About';
 import Home from './pages/Home';
 import NotFound from './pages/NotFound';
+import ServerDetails from './pages/ServerDetails';
 
 export function App() {
   const [alertInfo, setAlertInfo] = useState<{
@@ -57,6 +58,10 @@ export function App() {
                   setAlertInfo={setAlertInfo}
                 />
               }
+            />
+            <Route
+              path="/server/:id"
+              element={<ServerDetails setAlertInfo={setAlertInfo} />}
             />
             <Route path="/about" element={<About />} />
             <Route path="*" element={<NotFound />} />
