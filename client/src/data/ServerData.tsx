@@ -106,7 +106,7 @@ export const ServerSettingsInfo: Record<string, ServerSetting> = {
     transform: (arg) => {
       const numValue = Number(arg);
       if (!Number.isNaN(numValue)) {
-        return `${numValue / 1000}s`;
+        return `${(numValue / 1000).toFixed()}s`;
       }
       return '???';
     },
@@ -271,7 +271,7 @@ export const ServerSettingsInfo: Record<string, ServerSetting> = {
     transform: (arg) => {
       const numValue = Number(arg);
       if (!Number.isNaN(numValue)) {
-        return `${numValue / 60} min`;
+        return `${(numValue / 60).toFixed()} min`;
       }
       return '???';
     },
@@ -283,7 +283,7 @@ export const ServerSettingsInfo: Record<string, ServerSetting> = {
     transform: (arg) => {
       const numValue = Number(arg);
       if (!Number.isNaN(numValue)) {
-        return `${numValue / 60} min`;
+        return `${(numValue / 60).toFixed()} min`;
       }
       return '???';
     },
@@ -295,7 +295,7 @@ export const ServerSettingsInfo: Record<string, ServerSetting> = {
     transform: (arg) => {
       const numValue = Number(arg);
       if (!Number.isNaN(numValue)) {
-        return `${numValue / 60} min`;
+        return `${(numValue / 60).toFixed()} min`;
       }
       return '???';
     },
@@ -307,7 +307,7 @@ export const ServerSettingsInfo: Record<string, ServerSetting> = {
     transform: (arg) => {
       const numValue = Number(arg);
       if (!Number.isNaN(numValue)) {
-        return `${numValue / 60} min`;
+        return `${(numValue / 60).toFixed()} min`;
       }
       return '???';
     },
@@ -638,7 +638,7 @@ export const ServerSettingsInfo: Record<string, ServerSetting> = {
     transform: (arg) => {
       const numValue = Number(arg);
       if (!Number.isNaN(numValue)) {
-        return `${numValue / 60} min`;
+        return `${(numValue / 60).toFixed()} min`;
       }
       return '???';
     },
@@ -664,7 +664,7 @@ export const ServerSettingsInfo: Record<string, ServerSetting> = {
     transform: (arg) => {
       const numValue = Number(arg);
       if (!Number.isNaN(numValue)) {
-        return `${numValue / 60} min`;
+        return `${(numValue / 60).toFixed()} min`;
       }
       return '???';
     },
@@ -694,7 +694,7 @@ export const ServerSettingsInfo: Record<string, ServerSetting> = {
     transform: (arg) => {
       const numValue = Number(arg);
       if (!Number.isNaN(numValue)) {
-        return `${numValue / 60} min`;
+        return `${(numValue / 60).toFixed()} min`;
       }
       return '???';
     },
@@ -775,7 +775,7 @@ export const ServerSettingsInfo: Record<string, ServerSetting> = {
     transform: (arg) => {
       const numValue = Number(arg);
       if (!Number.isNaN(numValue)) {
-        return `${numValue / 60} min`;
+        return `${(numValue / 60).toFixed()} min`;
       }
       return '???';
     },
@@ -905,7 +905,7 @@ export const ServerSettingsInfo: Record<string, ServerSetting> = {
     transform: (arg) => {
       const numValue = Number(arg);
       if (!Number.isNaN(numValue)) {
-        return `${numValue / 60 / 60}hr`;
+        return `${(numValue / 60 / 60).toFixed()}hr`;
       }
       return '???';
     },
@@ -916,7 +916,7 @@ export const ServerSettingsInfo: Record<string, ServerSetting> = {
     transform: (arg) => {
       const numValue = Number(arg);
       if (!Number.isNaN(numValue)) {
-        return `${numValue / 60 / 60}hr`;
+        return `${(numValue / 60 / 60).toFixed()}hr`;
       }
       return '???';
     },
@@ -1160,10 +1160,6 @@ export const ServerSettingsInfo: Record<string, ServerSetting> = {
       }
       return '???';
     },
-  },
-  'MAP.ANTICHEAT_ENABLED': {
-    name: 'Anticheat',
-    description: 'Server side anti-cheating measurements active.',
   },
   'MAP.AUDIT_LINKSHELL': {
     name: 'Logs Linkshell Chat',
@@ -1505,7 +1501,7 @@ export const ServerSettingsInfo: Record<string, ServerSetting> = {
     transform: (arg) => {
       const numValue = Number(arg);
       if (!Number.isNaN(numValue)) {
-        return `${numValue < 0 ? '' : '+'}${((50 + numValue) / 50 - 1) * 100}%`;
+        return `${numValue < 0 ? '' : '+'}${(((50 + numValue) / 50 - 1) * 100).toFixed()}%`;
       }
       return '???';
     },
@@ -1538,7 +1534,7 @@ export const ServerSettingsInfo: Record<string, ServerSetting> = {
     transform: (arg) => {
       const numValue = Number(arg);
       if (!Number.isNaN(numValue)) {
-        return `${numValue < 0 ? '' : '+'}${((40 + numValue) / 40 - 1) * 100}%`;
+        return `${numValue < 0 ? '' : '+'}${(((40 + numValue) / 40 - 1) * 100).toFixed()}%`;
       }
       return '???';
     },
@@ -1645,7 +1641,7 @@ export const ServerSettingsInfo: Record<string, ServerSetting> = {
     transform: (arg) => {
       const numValue = Number(arg);
       if (!Number.isNaN(numValue)) {
-        return `${(1 / numValue) * 100}%`;
+        return `${((1 / numValue) * 100).toFixed()}%`;
       }
       return '???';
     },
@@ -1682,7 +1678,7 @@ export const ServerSettingsInfo: Record<string, ServerSetting> = {
     transform: (arg) => {
       const numValue = Number(arg);
       if (!Number.isNaN(numValue)) {
-        return `${numValue < 0 ? '' : '+'}${((50 + numValue) / 50 - 1) * 100}%`;
+        return `${numValue < 0 ? '' : '+'}${(((50 + numValue) / 50 - 1) * 100).toFixed()}%`;
       }
       return '???';
     },
@@ -1754,7 +1750,7 @@ export const ServerSettingsInfo: Record<string, ServerSetting> = {
     transform: (arg) => {
       const numValue = Number(arg);
       if (!Number.isNaN(numValue)) {
-        return `${numValue / 60} min`;
+        return `${(numValue / 60).toFixed()} min`;
       }
       return '???';
     },

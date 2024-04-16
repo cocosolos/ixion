@@ -23,6 +23,7 @@ import { AlertResponse } from '../components/Alert';
 import ErrorCard from '../components/ErrorCard';
 import ExpansionBar from '../components/ExpansionsBar';
 import ServerData, {
+  ServerSetting,
   ServerSettings,
   ServerSettingsInfo,
 } from '../data/ServerData';
@@ -30,16 +31,19 @@ import CopyImageIcon from '../images/copy-image.png';
 
 interface KeyValueRow {
   id: number;
-  key: string;
   name: string;
   value: string | number | boolean;
+  description: string;
+  key: string;
+  rawValue: string | number | boolean;
 }
 
 const columns: GridColDef[] = [
-  { field: 'key', headerName: 'Key', flex: 2 },
-  { field: 'name', headerName: 'Name', flex: 1 },
+  { field: 'name', headerName: 'Name', flex: 2 },
   { field: 'value', headerName: 'Value', flex: 1 },
-  { field: 'description', headerName: 'Description', flex: 3 },
+  { field: 'description', headerName: 'Description', flex: 4 },
+  { field: 'key', headerName: 'Key', flex: 1 },
+  { field: 'rawValue', headerName: 'Raw Value', flex: 1 },
 ];
 
 function ServerSettingsDataGrid({
@@ -47,13 +51,23 @@ function ServerSettingsDataGrid({
 }: {
   serverSettings: ServerSettings;
 }) {
+  const transformValue = (
+    v: boolean | string | number,
+    setting: ServerSetting
+  ): string | number | boolean => {
+    return setting.transform?.(v) ?? v;
+  };
   const rows: KeyValueRow[] = Object.entries(serverSettings).map(
     ([key, value], index) => ({
       id: index + 1,
-      key,
-      name: ServerSettingsInfo[key]?.name || 'none',
-      value,
+      name: ServerSettingsInfo[key]?.name || '',
+      value:
+        (ServerSettingsInfo[key] &&
+          transformValue(value, ServerSettingsInfo[key]).toString()) ||
+        '',
       description: ServerSettingsInfo[key]?.description || '',
+      key,
+      rawValue: value,
     })
   );
 
@@ -67,6 +81,21 @@ function ServerSettingsDataGrid({
         density="compact"
         hideFooterSelectedRowCount
         showCellVerticalBorder
+        initialState={{
+          sorting: {
+            sortModel: [{ field: 'name', sort: 'asc' }],
+          },
+          filter: {
+            filterModel: {
+              items: [{ field: 'name', operator: 'isNotEmpty' }],
+            },
+          },
+        }}
+        sx={{
+          '& .MuiDataGrid-cell': {
+            userSelect: 'text',
+          },
+        }}
       />
     </Box>
   );
