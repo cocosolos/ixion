@@ -1,7 +1,7 @@
 import { useMediaQuery } from '@mui/material';
 import { createTheme, StyledEngineProvider } from '@mui/material/styles';
 import ThemeProvider from '@mui/material/styles/ThemeProvider';
-import { createContext, ReactNode, useMemo, useState } from 'react';
+import { createContext, ReactNode, useEffect, useMemo, useState } from 'react';
 
 type ThemeContextType = {
   switchColorMode: () => void;
@@ -18,12 +18,22 @@ export const ThemeContext = createContext<ThemeContextType>({
 export function ThemeContextProvider({ children }: ThemeProviderProps) {
   const rootElement = document.getElementById('root');
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
-  const [mode, setMode] = useState<'light' | 'dark'>(
-    prefersDarkMode ? 'dark' : 'light'
-  );
+  const [mode, setMode] = useState<'light' | 'dark'>(() => {
+    const manualTheme = localStorage.getItem('theme');
+    if (manualTheme && (manualTheme === 'light' || manualTheme === 'dark')) {
+      return manualTheme;
+    }
+    return prefersDarkMode ? 'dark' : 'light';
+  });
+
+  useEffect(() => {
+    localStorage.setItem('theme', mode);
+  }, [mode]);
+
   const switchColorMode = () => {
     setMode((prevMode) => (prevMode === 'light' ? 'dark' : 'light'));
   };
+
   const theme = useMemo(
     () =>
       createTheme({

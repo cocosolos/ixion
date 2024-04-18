@@ -31,13 +31,10 @@ export default function About() {
               <Link to="https://github.com/LandSandBoat/server">
                 LandSandBoat
               </Link>{' '}
-              software (or serving their API). Servers are updated every hour,
-              and are automatically removed after 24 hours of failed updates.
-              All information is pulled directly from the servers and Ixion
-              makes no guarantees as to how current or correct the information
-              is and is in no way affiliated with any listed server. Always use
-              a different strong and unique password for every server (and just
-              in general).
+              software (or serving their API). Servers are updated at a set
+              interval and are removed after a variable amount of
+              disconnectivity. All information is gathered directly from the
+              listed servers.
             </Typography>
           </Box>
           <Box className="mb-3">
@@ -65,7 +62,8 @@ export default function About() {
               align="justify"
               color={(theme) => alpha(theme.palette.text.primary, 0.87)}
             >
-              Additional servers can be found on the XiPrivateServers{' '}
+              Additional servers and more detailed information can be found on
+              the XiPrivateServers{' '}
               <Link to="https://github.com/XiPrivateServers/Servers/blob/main/SERVERS.md">
                 GitHub
               </Link>
@@ -81,6 +79,72 @@ export default function About() {
               and don&apos;t forget to enable the HTTP server and list yourself
               here!
             </Typography>
+          </Box>
+          <Box className="mb-3">
+            <Typography align="center" variant="h6">
+              Notes
+            </Typography>
+            <ul className="m-0 pl-4">
+              <Typography
+                component="li"
+                variant="body2"
+                align="justify"
+                color={(theme) => alpha(theme.palette.text.primary, 0.87)}
+                className="mb-2"
+              >
+                Due to the nature of private server customization, only basic
+                details can be gathered from the LSB API. Ixion doesn&apos;t
+                know about EXP table changes or any kind of scripting or core
+                changes, just basic settings. If a server doesn&apos;t have a
+                website linked, check the{' '}
+                <Link to="https://github.com/XiPrivateServers/Servers/blob/main/SERVERS.md">
+                  XiPrivateServers GitHub
+                </Link>{' '}
+                and see if it&apos;s listed there. Server owners see below for
+                how to add a link to your website.
+              </Typography>
+              <Typography
+                component="li"
+                variant="body2"
+                align="justify"
+                color={(theme) => alpha(theme.palette.text.primary, 0.87)}
+                className="mb-2"
+              >
+                The information provided by Ixion is sourced from third-party
+                sources, and while we strive to ensure accuracy, we cannot
+                guarantee its completeness or reliability. Users are encouraged
+                to verify any information independently before making decisions
+                based on it.
+              </Typography>
+              <Typography
+                component="li"
+                variant="body2"
+                align="justify"
+                color={(theme) => alpha(theme.palette.text.primary, 0.87)}
+                className="mb-2"
+              >
+                Ixion may contain links to external websites operated by third
+                parties. These links are provided for convenience and
+                informational purposes only. We do not endorse or control the
+                content of these third-party sites, and we are not responsible
+                for their accuracy, legality, or content. Users access external
+                sites at their own risk.
+              </Typography>
+              <Typography
+                component="li"
+                variant="body2"
+                align="justify"
+                color={(theme) => alpha(theme.palette.text.primary, 0.87)}
+                className="mb-2"
+              >
+                All names, trademarks, and copyrights mentioned on this website
+                belong to their respective owners. Any use of these names,
+                trademarks, and copyrights is for identification purposes only
+                and does not imply endorsement, sponsorship, or affiliation with
+                our website. We acknowledge the ownership of these intellectual
+                properties and respect the rights of their owners.
+              </Typography>
+            </ul>
           </Box>
         </CardContent>
       </Card>

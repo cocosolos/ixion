@@ -103,12 +103,12 @@ export default function ServerCard({ server }: { server: ServerData }) {
 
     return (
       <Tooltip
+        key={key}
         arrow
         disableInteractive
         title={ServerSettingsInfo[key].description}
       >
         <Chip
-          key={key}
           label={`${ServerSettingsInfo[key].name === '' ? key : ServerSettingsInfo[key].name}`}
           avatar={
             typeof chipValue === 'object' ? undefined : (

@@ -19,15 +19,15 @@ import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { fetchData, fetchDemo } from '../apiUtil';
-import { AlertResponse } from '../components/Alert';
-import ErrorCard from '../components/ErrorCard';
-import ExpansionBar from '../components/ExpansionsBar';
 import ServerData, {
   ServerSetting,
   ServerSettings,
   ServerSettingsInfo,
 } from '../data/ServerData';
 import CopyImageIcon from '../images/copy-image.png';
+import { AlertResponse } from './Alert';
+import ErrorCard from './ErrorCard';
+import ExpansionBar from './ExpansionsBar';
 
 interface KeyValueRow {
   id: number;

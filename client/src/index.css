@@ -7,3 +7,7 @@
   user-drag: none;
   user-select: none;
 }
+
+code {
+  user-select: text;
+}
