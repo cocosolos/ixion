@@ -142,32 +142,57 @@ export default function ServerCard({ server }: { server: ServerData }) {
     <Card className="mb-2">
       <Accordion className="my-0">
         <AccordionSummary expandIcon={<ExpandMore />}>
-          <Box className="flex items-center justify-center">
-            {server.customizations['LOGIN.MAINT_MODE'] === 1 ? (
+          <Box className="flex flex-col items-center justify-center">
+            <Box className="flex content-center">
+              {server.customizations['LOGIN.MAINT_MODE'] === 1 ? (
+                <Tooltip
+                  arrow
+                  disableInteractive
+                  title="Server is undergoing maintenance."
+                >
+                  <Warning color="warning" />
+                </Tooltip>
+              ) : (
+                <div>
+                  {!server.up ? (
+                    <Tooltip
+                      arrow
+                      disableInteractive
+                      title="Server is offline."
+                    >
+                      <PublicOff color="error" />
+                    </Tooltip>
+                  ) : (
+                    <Tooltip arrow disableInteractive title="Server is online.">
+                      <Public color="success" />
+                    </Tooltip>
+                  )}
+                </div>
+              )}
+            </Box>
+            <Box className="flex content-center">
               <Tooltip
                 arrow
                 disableInteractive
-                title="Server is undergoing maintenance."
+                title="Estimated server geolocation provided by DB-IP."
               >
-                <Warning color="warning" />
+                <Typography
+                  variant="caption"
+                  component={Link}
+                  to="https://db-ip.com"
+                  target="_blank"
+                  onClick={(event) => {
+                    event.stopPropagation();
+                  }}
+                  sx={{
+                    textDecoration: 'none',
+                  }}
+                  color={(theme) => alpha(theme.palette.text.primary, 0.5)}
+                >
+                  {server.location}
+                </Typography>
               </Tooltip>
-            ) : (
-              <div>
-                {server.inactivity_counter > 0 ? (
-                  <Tooltip
-                    arrow
-                    disableInteractive
-                    title={`Offline for ${server.inactivity_counter} hours.`}
-                  >
-                    <PublicOff color="error" />
-                  </Tooltip>
-                ) : (
-                  <Tooltip arrow disableInteractive title="Server is online.">
-                    <Public color="success" />
-                  </Tooltip>
-                )}
-              </div>
-            )}
+            </Box>
           </Box>
           <CardContent className="grow py-1">
             <Box className="flex content-center">

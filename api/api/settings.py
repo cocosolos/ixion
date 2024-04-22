@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "corsheaders",
     "rest_framework",
+    "geoip2",
     "v1",
 ]
 
@@ -139,3 +140,5 @@ CORS_ALLOWED_ORIGINS = os.getenv(
 CORS_ALLOW_ALL_ORIGINS = (
     os.getenv("CORS_ALLOW_ALL_ORIGINS", default="False").lower() == "true"
 )
+
+GEOIP_PATH = os.path.join(BASE_DIR, "geoip")

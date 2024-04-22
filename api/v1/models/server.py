@@ -1,3 +1,4 @@
+import datetime
 import json
 import os
 import socket
@@ -7,6 +8,7 @@ from django.core.validators import URLValidator
 from django.core.exceptions import ValidationError
 from urllib.parse import urlparse
 from v1.common.logging import logger
+from django.contrib.gis.geoip2 import GeoIP2
 
 # Required and recommended settings used to build the initial client server card
 required_settings = [
@@ -41,14 +43,20 @@ class Server(models.Model):
         null=False,
         validators=[OptionalSchemeURLValidator()],
     )
+    location = models.CharField(max_length=255, null=True, editable=False)
     max_level = models.IntegerField(null=True, editable=False)
     settings = models.JSONField(null=True, editable=False)
     customizations = models.JSONField(null=True, editable=False)
     login_limit = models.IntegerField(null=True, editable=False)
     active_sessions = models.IntegerField(null=True, editable=False)
     created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
-    inactivity_counter = models.IntegerField(null=True, editable=False)
+    updated = models.DateTimeField(null=True, editable=False)
+    up = models.BooleanField(null=True, editable=False)
+
+    @property
+    def expires(self):
+        time_since_creation = self.updated - self.created
+        return self.updated + min(time_since_creation, datetime.timedelta(hours=24))
 
     def _str_(self):
         return self.url
@@ -69,17 +77,14 @@ class Server(models.Model):
 
         # Validate the server API
         if not self.parse_server_api():
-            if (
-                self.inactivity_counter is None
-                or self.inactivity_counter
-                >= int(os.getenv("SERVER_INACTIVITY_TIMEOUT", default="24")) - 1
-            ):
+            if self.expires <= datetime.datetime.now(datetime.timezone.utc):
                 return False
-            self.inactivity_counter += 1
+            self.up = False
         else:
             if self.settings["API.DO_NOT_TRACK"]:
                 return False
-            self.inactivity_counter = 0
+            self.up = True
+            self.updated = datetime.datetime.now(datetime.timezone.utc)
 
         # Proceed with saving the object
         logger.info(f"Saving Server object with URL: {self.url}")
@@ -141,6 +146,10 @@ class Server(models.Model):
             #             s.connect((self.url, port))
             #     except socket.error:
             #         return False
+
+            g = GeoIP2()
+            city = g.city(f"{self.url}")
+            self.location = city["continent_code"]
 
             return True
 

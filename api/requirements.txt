@@ -6,3 +6,4 @@ celery
 redis
 python-dotenv
 gunicorn
+geoip2

@@ -10,12 +10,13 @@ class ServerSerializer(serializers.ModelSerializer):
             "id",
             "name",
             "url",
+            "location",
             "max_level",
             "customizations",
             "login_limit",
             "active_sessions",
             "updated",
-            "inactivity_counter",
+            "up",
         ]
 
     def create(self, validated_data):

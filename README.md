@@ -6,6 +6,8 @@ Ixion is designed to catalog public [LandSandBoat](https://github.com/LandSandBo
 
 The React client fetches server data from the API and displays it in a relevant way to users. Filtering is built into the client for now. When the API response fails or is empty, a default LSB demo server is displayed, pulling some info from GitHub.
 
+[IP Geolocation by DB-IP](https://db-ip.com)
+
 ## Features
 
 - **Automatic Verification**: Verifies LSB server URL by sending a request to the public API. [Requires the LSB server to enable the HTTP server.](https://github.com/LandSandBoat/server/blob/df311283c4abb779d212e2b8af6734b0d8d11ad7/settings/default/network.lua#L33)

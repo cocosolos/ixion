@@ -26,7 +26,9 @@ app.conf.result_backend = f"redis://redis:6379"
 app.conf.beat_schedule = {
     "verify-urls-every-hour": {
         "task": "api.tasks.verify_urls_task",
-        "schedule": timedelta(hours=1),
+        "schedule": timedelta(
+            minutes=int(os.getenv("SERVER_UPDATE_INTERVAL", default="10"))
+        ),
         # "schedule": timedelta(minutes=1),
     },
 }

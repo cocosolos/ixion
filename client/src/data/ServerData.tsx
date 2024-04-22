@@ -15,19 +15,21 @@ export default interface ServerData {
   id: number;
   name: string;
   url: string;
+  location: string;
   max_level: number;
   settings?: ServerSettings;
   customizations: ServerSettings;
   login_limit: number;
   active_sessions: number;
   updated: string;
-  inactivity_counter: number;
+  up: boolean;
 }
 
 export const DemoServerData: ServerData = {
   id: 0,
   name: 'LandSandBoat Demo',
   url: 'github.com/LandSandBoat/server',
+  location: 'NA',
   max_level: 99,
   settings: LsbDefaults,
   customizations: {
@@ -43,7 +45,7 @@ export const DemoServerData: ServerData = {
   login_limit: 0,
   active_sessions: 0,
   updated: new Date().toISOString(),
-  inactivity_counter: 0,
+  up: true,
 };
 
 export const ServerSettingsInfo: Record<string, ServerSetting> = {
