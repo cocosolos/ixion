@@ -15,99 +15,15 @@ import {
   Typography,
   alpha,
 } from '@mui/material';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { fetchData, fetchDemo } from '../apiUtil';
-import ServerData, {
-  ServerSetting,
-  ServerSettings,
-  ServerSettingsInfo,
-} from '../data/ServerData';
+import { AlertResponse } from '../components/Alert';
+import ErrorCard from '../components/ErrorCard';
+import ExpansionBar from '../components/ExpansionsBar';
+import ServerSettingsDataGrid from '../components/ServerSettingsDataGrid';
+import ServerData from '../data/ServerData';
 import CopyImageIcon from '../images/copy-image.png';
-import { AlertResponse } from './Alert';
-import ErrorCard from './ErrorCard';
-import ExpansionBar from './ExpansionsBar';
-
-interface KeyValueRow {
-  id: number;
-  key: string;
-  rawValue: string | number | boolean;
-  name: string;
-  value: string | number | boolean;
-  description: string;
-}
-
-const columns: GridColDef[] = [
-  { field: 'key', headerName: 'Key', flex: 4, align: 'right' },
-  { field: 'rawValue', headerName: 'Raw Value', flex: 1, align: 'left' },
-  { field: 'name', headerName: 'Name', flex: 3, align: 'right' },
-  { field: 'value', headerName: 'Value', flex: 1, align: 'left' },
-  { field: 'description', headerName: 'Description', flex: 6 },
-];
-
-function ServerSettingsDataGrid({
-  serverSettings,
-}: {
-  serverSettings: ServerSettings;
-}) {
-  const transformValue = (
-    v: boolean | string | number,
-    setting: ServerSetting
-  ): string | number | boolean => {
-    return setting.transform?.(v) ?? v;
-  };
-  const rows: KeyValueRow[] = Object.entries(serverSettings).map(
-    ([key, value], index) => ({
-      id: index + 1,
-      key,
-      rawValue: value,
-      name: ServerSettingsInfo[key]?.name || '',
-      value:
-        (ServerSettingsInfo[key] &&
-          transformValue(value, ServerSettingsInfo[key]).toString()) ||
-        '',
-      description: ServerSettingsInfo[key]?.description || '',
-    })
-  );
-
-  return (
-    <Box className="w-full">
-      <DataGrid
-        rows={rows}
-        columns={columns}
-        checkboxSelection={false}
-        autoHeight
-        density="compact"
-        hideFooterSelectedRowCount
-        showColumnVerticalBorder
-        getRowHeight={() => 'auto'}
-        initialState={{
-          sorting: {
-            sortModel: [{ field: 'name', sort: 'asc' }],
-          },
-          filter: {
-            filterModel: {
-              items: [{ field: 'name', operator: 'isNotEmpty' }],
-            },
-          },
-          columns: {
-            columnVisibilityModel: {
-              key: false,
-              rawValue: false,
-            },
-          },
-        }}
-        sx={{
-          '& .MuiDataGrid-cell': {
-            userSelect: 'text',
-            py: 1,
-          },
-        }}
-      />
-    </Box>
-  );
-}
 
 export default function ServerDetails({
   setAlertInfo,

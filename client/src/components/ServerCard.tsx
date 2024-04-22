@@ -277,9 +277,11 @@ export default function ServerCard({ server }: { server: ServerData }) {
         </AccordionDetails>
       </Accordion>
       <Divider />
-      <CardContent className="flex justify-between py-0">
-        <Typography variant="caption" className="flex items-center">
-          {server.active_sessions} active sessions
+      <CardContent className="flex flex-wrap justify-between py-0">
+        <Box className="flex items-center whitespace-nowrap">
+          <Typography variant="caption">
+            {server.active_sessions} active sessions
+          </Typography>
           {server.login_limit !== 1 && (
             <Tooltip
               title={`Server allows ${server.login_limit === 0 ? 'unlimited' : server.login_limit} simultaneous game sessions per IP.`}
@@ -290,16 +292,16 @@ export default function ServerCard({ server }: { server: ServerData }) {
                 src={CopyImageIcon}
                 alt=""
                 style={{
-                  maxHeight: '1.5em',
+                  maxHeight: '1em',
                   marginLeft: '0.5em',
-                  verticalAlign: 'middle',
                 }}
                 onContextMenu={(event) => event.preventDefault()}
               />
             </Tooltip>
           )}
-        </Typography>
-        <Typography variant="caption" className="flex items-center">
+        </Box>
+        <Box className="flex items-center whitespace-nowrap">
+          {/* <ServerDetailsModal id={server.id} /> */}
           <Tooltip title="View full settings." arrow disableInteractive>
             <IconButton
               component={Link}
@@ -311,8 +313,10 @@ export default function ServerCard({ server }: { server: ServerData }) {
               <Info className="p-1" />
             </IconButton>
           </Tooltip>
-          Updated: {new Date(server.updated).toLocaleString()}
-        </Typography>
+          <Typography variant="caption">
+            Updated: {new Date(server.updated).toLocaleString()}
+          </Typography>
+        </Box>
       </CardContent>
     </Card>
   );

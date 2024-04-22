@@ -1,0 +1,87 @@
+import { Box } from '@mui/material';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import {
+  ServerSetting,
+  ServerSettings,
+  ServerSettingsInfo,
+} from '../data/ServerData';
+
+interface KeyValueRow {
+  id: number;
+  key: string;
+  rawValue: string | number | boolean;
+  name: string;
+  value: string | number | boolean;
+  description: string;
+}
+
+const columns: GridColDef[] = [
+  { field: 'key', headerName: 'Key', flex: 4, align: 'right' },
+  { field: 'rawValue', headerName: 'Raw Value', flex: 1, align: 'left' },
+  { field: 'name', headerName: 'Name', flex: 3, align: 'right' },
+  { field: 'value', headerName: 'Value', flex: 1, align: 'left' },
+  { field: 'description', headerName: 'Description', flex: 6 },
+];
+
+export default function ServerSettingsDataGrid({
+  serverSettings,
+}: {
+  serverSettings: ServerSettings;
+}) {
+  const transformValue = (
+    v: boolean | string | number,
+    setting: ServerSetting
+  ): string | number | boolean => {
+    return setting.transform?.(v) ?? v;
+  };
+  const rows: KeyValueRow[] = Object.entries(serverSettings).map(
+    ([key, value], index) => ({
+      id: index + 1,
+      key,
+      rawValue: value,
+      name: ServerSettingsInfo[key]?.name || '',
+      value:
+        (ServerSettingsInfo[key] &&
+          transformValue(value, ServerSettingsInfo[key]).toString()) ||
+        '',
+      description: ServerSettingsInfo[key]?.description || '',
+    })
+  );
+
+  return (
+    <Box className="w-full">
+      <DataGrid
+        rows={rows}
+        columns={columns}
+        checkboxSelection={false}
+        autoHeight
+        density="compact"
+        hideFooterSelectedRowCount
+        showColumnVerticalBorder
+        getRowHeight={() => 'auto'}
+        initialState={{
+          sorting: {
+            sortModel: [{ field: 'name', sort: 'asc' }],
+          },
+          filter: {
+            filterModel: {
+              items: [{ field: 'name', operator: 'isNotEmpty' }],
+            },
+          },
+          columns: {
+            columnVisibilityModel: {
+              key: false,
+              rawValue: false,
+            },
+          },
+        }}
+        sx={{
+          '& .MuiDataGrid-cell': {
+            userSelect: 'text',
+            py: 1,
+          },
+        }}
+      />
+    </Box>
+  );
+}

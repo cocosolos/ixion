@@ -4,12 +4,12 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import AlertComponent from './components/Alert';
 import Footer from './components/Footer';
 import Header from './components/Header';
-import ServerDetails from './components/ServerDetails';
 import SearchState from './data/SearchState';
 import ServerData from './data/ServerData';
 import About from './pages/About';
 import Home from './pages/Home';
 import NotFound from './pages/NotFound';
+import ServerDetails from './pages/ServerDetails';
 
 export function App() {
   const [alertInfo, setAlertInfo] = useState<{
