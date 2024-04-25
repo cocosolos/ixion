@@ -6,7 +6,7 @@ Ixion is designed to catalog public [LandSandBoat](https://github.com/LandSandBo
 
 The React client fetches server data from the API and displays it in a relevant way to users. Filtering is built into the client for now. When the API response fails or is empty, a default LSB demo server is displayed, pulling some info from GitHub.
 
-[IP Geolocation by DB-IP](https://db-ip.com)
+[This product includes GeoLite2 Data created by MaxMind.](https://www.maxmind.com/)
 
 ## Features
 

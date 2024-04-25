@@ -144,12 +144,12 @@ export default function ServerDetails({
                 <Tooltip
                   arrow
                   disableInteractive
-                  title="Estimated server geolocation provided by DB-IP"
+                  title="Estimated server geolocation provided by MaxMind"
                 >
                   <Typography
                     variant="caption"
                     component={Link}
-                    to="https://db-ip.com"
+                    to="https://www.maxmind.com/"
                     target="_blank"
                     onClick={(event) => {
                       event.stopPropagation();

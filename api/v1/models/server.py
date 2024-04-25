@@ -147,9 +147,12 @@ class Server(models.Model):
             #     except socket.error:
             #         return False
 
-            g = GeoIP2()
-            city = g.city(f"{self.url}")
-            self.location = city["continent_code"]
+            try:
+                g = GeoIP2()
+                city = g.city(f"{self.url}")
+                self.location = city["continent_code"]
+            except:
+                self.location = "??"
 
             return True
 
