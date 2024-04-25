@@ -16,10 +16,10 @@ interface KeyValueRow {
 }
 
 const columns: GridColDef[] = [
-  { field: 'key', headerName: 'Key', flex: 4, align: 'right' },
-  { field: 'rawValue', headerName: 'Raw Value', flex: 1, align: 'left' },
-  { field: 'name', headerName: 'Name', flex: 3, align: 'right' },
-  { field: 'value', headerName: 'Value', flex: 1, align: 'left' },
+  { field: 'key', headerName: 'Key', align: 'right', flex: 4 },
+  { field: 'rawValue', headerName: 'Raw Value', align: 'left' },
+  { field: 'name', headerName: 'Name', align: 'right', flex: 3 },
+  { field: 'value', headerName: 'Value', align: 'left' },
   { field: 'description', headerName: 'Description', flex: 6 },
 ];
 

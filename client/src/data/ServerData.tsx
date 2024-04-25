@@ -303,7 +303,7 @@ export const ServerSettingsInfo: Record<string, ServerSetting> = {
     },
   },
   'MAIN.COFFER_MIN_ILLUSION_TIME': {
-    name: 'Coffer Max Illusion',
+    name: 'Coffer Min Illusion',
     description:
       'Together with min time, determines the random range in which loot is unavailable from treasure coffers.',
     transform: (arg) => {
