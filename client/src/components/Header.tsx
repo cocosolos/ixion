@@ -22,11 +22,13 @@ export default function Header({
   servers,
   setServers,
   searchState,
+  setSearchState,
 }: {
   setAlertInfo: React.Dispatch<React.SetStateAction<AlertResponse>>;
   servers: ServerData[];
   setServers: React.Dispatch<React.SetStateAction<ServerData[]>>;
   searchState: SearchState;
+  setSearchState: React.Dispatch<React.SetStateAction<SearchState>>;
 }) {
   const [fetchLoading, setFetchLoading] = useState(0);
   const [showSearchServer, setShowSearchServer] = useState(false);
@@ -103,6 +105,7 @@ export default function Header({
       <SearchServers
         showSearchServer={showSearchServer}
         searchState={searchState}
+        setSearchState={setSearchState}
       />
     </Box>
   );

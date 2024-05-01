@@ -9,6 +9,7 @@ services:
       - /var/run/docker.sock:/var/run/docker-host.sock
       - ixion-dev-node_modules:/workspace/client/node_modules
       - ixion-dev-static:/workspace/api/static
+      - ixion-dev-database:/workspace/api/db
       - ..:/workspace:cached
   client:
     image: ixion-dev:latest
@@ -31,6 +32,7 @@ services:
     environment:
       - DEBUG=true
     volumes:
+      - ixion-dev-database:/workspace/api/db
       - ixion-dev-static:/workspace/api/static
       - ../api:/workspace/api:cached
       - ../client:/workspace/client:cached
@@ -44,6 +46,7 @@ services:
     working_dir: /workspace/api
     command: celery -A api worker -l info
     volumes:
+      - ixion-dev-database:/workspace/api/db
       - ../api:/workspace/api:cached
     depends_on:
       - workspace
@@ -63,3 +66,4 @@ services:
 volumes:
   ixion-dev-node_modules:
   ixion-dev-static:
+  ixion-dev-database:

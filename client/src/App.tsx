@@ -4,7 +4,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import AlertComponent from './components/Alert';
 import Footer from './components/Footer';
 import Header from './components/Header';
-import SearchState from './data/SearchState';
+import SearchState, { SearchStateDefaults } from './data/SearchState';
 import ServerData from './data/ServerData';
 import About from './pages/About';
 import Home from './pages/Home';
@@ -18,23 +18,8 @@ export function App() {
   } | null>(null);
   const [servers, setServers] = useState<ServerData[]>([]);
 
-  const [searchName, setSearchName] = useState('');
-  const [searchMultibox, setSearchMultibox] = useState<string[] | null>(null);
-  const [searchTrusts, setSearchTrusts] = useState<string[] | null>(null);
-  const [searchLevelSync, setSearchLevelSync] = useState<string[] | null>(null);
-  const [searchMaxLevel, setSearchMaxLevel] = useState<number[]>([1, 99]);
-  const [searchExpansions, setSearchExpansions] = useState<string[] | null>(
-    null
-  );
-
-  const searchState: SearchState = {
-    name: { value: searchName, setValue: setSearchName },
-    multibox: { value: searchMultibox, setValue: setSearchMultibox },
-    trusts: { value: searchTrusts, setValue: setSearchTrusts },
-    levelSync: { value: searchLevelSync, setValue: setSearchLevelSync },
-    maxLevel: { value: searchMaxLevel, setValue: setSearchMaxLevel },
-    expansions: { value: searchExpansions, setValue: setSearchExpansions },
-  };
+  const [searchState, setSearchState] =
+    useState<SearchState>(SearchStateDefaults);
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -43,6 +28,7 @@ export function App() {
         servers={servers}
         setServers={setServers}
         searchState={searchState}
+        setSearchState={setSearchState}
       />
       <AlertComponent alertInfo={alertInfo} setAlertInfo={setAlertInfo} />
       <Container className="grow p-0">

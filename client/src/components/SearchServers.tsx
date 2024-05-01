@@ -15,9 +15,11 @@ import SearchState from '../data/SearchState';
 export default function SearchServers({
   showSearchServer,
   searchState,
+  setSearchState,
 }: {
   showSearchServer: boolean;
   searchState: SearchState;
+  setSearchState: React.Dispatch<React.SetStateAction<SearchState>>;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [contentHeight, setContentHeight] = useState(0);
@@ -32,28 +34,28 @@ export default function SearchServers({
   }, [showSearchServer]);
 
   const handleSearchName = (event: React.ChangeEvent<HTMLInputElement>) => {
-    searchState.name.setValue(event.target.value);
+    setSearchState({ ...searchState, name: event.target.value });
   };
 
   const handleSearchMultibox = (
     _event: React.MouseEvent<HTMLElement>,
     newSearchMultibox: string[]
   ) => {
-    searchState.multibox.setValue(newSearchMultibox);
+    setSearchState({ ...searchState, multibox: newSearchMultibox });
   };
 
   const handleSearchTrusts = (
     _event: React.MouseEvent<HTMLElement>,
     newSearchTrusts: string[]
   ) => {
-    searchState.trusts.setValue(newSearchTrusts);
+    setSearchState({ ...searchState, trusts: newSearchTrusts });
   };
 
   const handleSearchLevelSync = (
     _event: React.MouseEvent<HTMLElement>,
     newSearchLevelSync: string[]
   ) => {
-    searchState.levelSync.setValue(newSearchLevelSync);
+    setSearchState({ ...searchState, levelSync: newSearchLevelSync });
   };
 
   const handleSearchMaxLevelMin = (
@@ -65,10 +67,13 @@ export default function SearchServers({
     } else if (newValue > 99) {
       newValue = 99;
     }
-    searchState.maxLevel.setValue([
-      Math.min(newValue, searchState.maxLevel.value[1] - minDistance),
-      searchState.maxLevel.value[1],
-    ]);
+    setSearchState({
+      ...searchState,
+      maxLevel: [
+        Math.min(newValue, searchState.maxLevel[1] - minDistance),
+        searchState.maxLevel[1],
+      ],
+    });
   };
 
   const handleSearchMaxLevelMax = (
@@ -80,10 +85,13 @@ export default function SearchServers({
     } else if (newValue > 99) {
       newValue = 99;
     }
-    searchState.maxLevel.setValue([
-      searchState.maxLevel.value[0],
-      Math.max(newValue, searchState.maxLevel.value[0] + minDistance),
-    ]);
+    setSearchState({
+      ...searchState,
+      maxLevel: [
+        searchState.maxLevel[0],
+        Math.max(newValue, searchState.maxLevel[0] + minDistance),
+      ],
+    });
   };
 
   const handleSearchMaxLevel = (
@@ -95,15 +103,21 @@ export default function SearchServers({
       return;
     }
     if (activeThumb === 0) {
-      searchState.maxLevel.setValue([
-        Math.min(newValue[0], searchState.maxLevel.value[1] - minDistance),
-        searchState.maxLevel.value[1],
-      ]);
+      setSearchState({
+        ...searchState,
+        maxLevel: [
+          Math.min(newValue[0], searchState.maxLevel[1] - minDistance),
+          searchState.maxLevel[1],
+        ],
+      });
     } else {
-      searchState.maxLevel.setValue([
-        searchState.maxLevel.value[0],
-        Math.max(newValue[1], searchState.maxLevel.value[0] + minDistance),
-      ]);
+      setSearchState({
+        ...searchState,
+        maxLevel: [
+          searchState.maxLevel[0],
+          Math.max(newValue[1], searchState.maxLevel[0] + minDistance),
+        ],
+      });
     }
   };
 
@@ -112,23 +126,24 @@ export default function SearchServers({
     newSearchExpansions: string[]
   ) => {
     if (newSearchExpansions.length === 0) {
-      searchState.expansions.setValue(null);
+      setSearchState({ ...searchState, expansions: null });
     } else if (
-      searchState.expansions.value &&
-      searchState.expansions.value.includes('none') &&
+      searchState.expansions &&
+      searchState.expansions.includes('none') &&
       newSearchExpansions.length > 1
     ) {
-      searchState.expansions.setValue(
-        newSearchExpansions.filter((item) => item !== 'none')
-      );
+      setSearchState({
+        ...searchState,
+        expansions: newSearchExpansions.filter((item) => item !== 'none'),
+      });
     } else if (
-      searchState.expansions.value &&
-      !searchState.expansions.value.includes('none') &&
+      searchState.expansions &&
+      !searchState.expansions.includes('none') &&
       newSearchExpansions.includes('none')
     ) {
-      searchState.expansions.setValue(['none']);
+      setSearchState({ ...searchState, expansions: ['none'] });
     } else {
-      searchState.expansions.setValue(newSearchExpansions);
+      setSearchState({ ...searchState, expansions: newSearchExpansions });
     }
   };
 
@@ -149,7 +164,7 @@ export default function SearchServers({
         {/* Name */}
         <Grid item xs={12}>
           <TextField
-            value={searchState.name.value}
+            value={searchState.name}
             onChange={handleSearchName}
             variant="standard"
             autoComplete="false"
@@ -174,7 +189,7 @@ export default function SearchServers({
         </Grid>
         <Grid item xs={12} className="flex pt-0">
           <Input
-            value={searchState.maxLevel.value[0]}
+            value={searchState.maxLevel[0]}
             size="small"
             onChange={handleSearchMaxLevelMin}
             // onBlur={handleBlur}
@@ -188,7 +203,7 @@ export default function SearchServers({
           />
           <Slider
             aria-labelledby="max-level-slider"
-            value={searchState.maxLevel.value}
+            value={searchState.maxLevel}
             onChange={handleSearchMaxLevel}
             valueLabelDisplay="auto"
             disableSwap
@@ -198,7 +213,7 @@ export default function SearchServers({
             max={99}
           />
           <Input
-            value={searchState.maxLevel.value[1]}
+            value={searchState.maxLevel[1]}
             size="small"
             onChange={handleSearchMaxLevelMax}
             // onBlur={handleBlur}
@@ -230,7 +245,7 @@ export default function SearchServers({
             </Typography>
           </Tooltip>
           <ToggleButtonGroup
-            value={searchState.expansions.value}
+            value={searchState.expansions}
             onChange={handleSearchExpansions}
             size="small"
             aria-labelledby="expansions-button-group"
@@ -307,7 +322,7 @@ export default function SearchServers({
             Multiboxing
           </Typography>
           <ToggleButtonGroup
-            value={searchState.multibox.value}
+            value={searchState.multibox}
             onChange={handleSearchMultibox}
             size="small"
             aria-labelledby="multibox-button-group"
@@ -355,7 +370,7 @@ export default function SearchServers({
             Trusts
           </Typography>
           <ToggleButtonGroup
-            value={searchState.trusts.value}
+            value={searchState.trusts}
             onChange={handleSearchTrusts}
             size="small"
             aria-labelledby="trust-button-group"
@@ -395,7 +410,7 @@ export default function SearchServers({
             Level Sync
           </Typography>
           <ToggleButtonGroup
-            value={searchState.levelSync.value}
+            value={searchState.levelSync}
             onChange={handleSearchLevelSync}
             size="small"
             aria-labelledby="level-sync-button-group"

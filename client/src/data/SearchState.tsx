@@ -1,13 +1,17 @@
-interface SearchStateTemplate<T> {
-  value: T;
-  setValue: React.Dispatch<React.SetStateAction<T>>;
+export default interface SearchState {
+  name: string;
+  multibox: string[] | null;
+  trusts: string[] | null;
+  levelSync: string[] | null;
+  maxLevel: number[];
+  expansions: string[] | null;
 }
 
-export default interface SearchState {
-  name: SearchStateTemplate<string>;
-  multibox: SearchStateTemplate<string[] | null>;
-  trusts: SearchStateTemplate<string[] | null>;
-  levelSync: SearchStateTemplate<string[] | null>;
-  maxLevel: SearchStateTemplate<number[]>;
-  expansions: SearchStateTemplate<string[] | null>;
-}
+export const SearchStateDefaults: SearchState = {
+  name: '',
+  multibox: null,
+  trusts: null,
+  levelSync: null,
+  maxLevel: [1, 99],
+  expansions: null,
+};

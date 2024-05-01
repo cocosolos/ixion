@@ -16,6 +16,8 @@ services:
         build: .
         command: celery -A api worker -l info
         restart: always
+        volumes:
+            - database:/app/db
         depends_on:
             - api
     celery-beat:

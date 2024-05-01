@@ -43,28 +43,28 @@ export default function Home({
   }, [setAlertInfo, setServers]);
 
   const filterServers = (server: ServerData): boolean => {
-    if (searchState.name.value.length > 0) {
+    if (searchState.name.length > 0) {
       const serverName = server.name.toLowerCase();
-      if (!serverName.includes(searchState.name.value.toLowerCase())) {
+      if (!serverName.includes(searchState.name.toLowerCase())) {
         return false;
       }
     }
 
-    if (server.max_level < searchState.maxLevel.value[0]) {
+    if (server.max_level < searchState.maxLevel[0]) {
       return false;
     }
-    if (server.max_level > searchState.maxLevel.value[1]) {
+    if (server.max_level > searchState.maxLevel[1]) {
       return false;
     }
 
     if (
-      searchState.trusts.value &&
+      searchState.trusts &&
       typeof server.customizations['MAIN.ENABLE_TRUST_CASTING'] === 'number'
     ) {
       const serverTrusts =
         server.customizations['MAIN.ENABLE_TRUST_CASTING'] === 1;
-      const searchEnabled = searchState.trusts.value.includes('enabled');
-      const searchDisabled = searchState.trusts.value.includes('disabled');
+      const searchEnabled = searchState.trusts.includes('enabled');
+      const searchDisabled = searchState.trusts.includes('disabled');
       if (serverTrusts && searchDisabled && !searchEnabled) {
         return false;
       }
@@ -74,12 +74,12 @@ export default function Home({
     }
 
     if (
-      searchState.levelSync.value &&
+      searchState.levelSync &&
       typeof server.customizations['MAP.LEVEL_SYNC_ENABLE'] === 'boolean'
     ) {
       const serverLevelSync = server.customizations['MAP.LEVEL_SYNC_ENABLE'];
-      const searchEnabled = searchState.levelSync.value.includes('enabled');
-      const searchDisabled = searchState.levelSync.value.includes('disabled');
+      const searchEnabled = searchState.levelSync.includes('enabled');
+      const searchDisabled = searchState.levelSync.includes('disabled');
       if (serverLevelSync && searchDisabled && !searchEnabled) {
         return false;
       }
@@ -88,21 +88,21 @@ export default function Home({
       }
     }
 
-    if (searchState.expansions.value) {
-      const searchNoneEnabled = searchState.expansions.value.includes('none');
-      const searchRotzEnabled = searchState.expansions.value.includes('rotz');
+    if (searchState.expansions) {
+      const searchNoneEnabled = searchState.expansions.includes('none');
+      const searchRotzEnabled = searchState.expansions.includes('rotz');
       const serverRotzEnabled =
         server.customizations['LOGIN.RISE_OF_ZILART'] === true;
-      const searchCopEnabled = searchState.expansions.value.includes('cop');
+      const searchCopEnabled = searchState.expansions.includes('cop');
       const serverCopEnabled =
         server.customizations['LOGIN.CHAINS_OF_PROMATHIA'] === true;
-      const searchToauEnabled = searchState.expansions.value.includes('toau');
+      const searchToauEnabled = searchState.expansions.includes('toau');
       const serverToauEnabled =
         server.customizations['LOGIN.TREASURES_OF_AHT_URGHAN'] === true;
-      const searchWotgEnabled = searchState.expansions.value.includes('wotg');
+      const searchWotgEnabled = searchState.expansions.includes('wotg');
       const serverWotgEnabled =
         server.customizations['LOGIN.WINGS_OF_THE_GODDESS'] === true;
-      const searchSoaEnabled = searchState.expansions.value.includes('soa');
+      const searchSoaEnabled = searchState.expansions.includes('soa');
       const serverSoaEnabled =
         server.customizations['LOGIN.SEEKERS_OF_ADOULIN'] === true;
       if (
@@ -132,20 +132,17 @@ export default function Home({
       }
     }
 
-    if (searchState.multibox.value) {
+    if (searchState.multibox) {
       const serverMultibox = server.login_limit;
-      if (searchState.multibox.value.includes('none') && serverMultibox !== 1) {
+      if (searchState.multibox.includes('none') && serverMultibox !== 1) {
+        return false;
+      }
+      if (searchState.multibox.includes('unlimited') && serverMultibox !== 0) {
         return false;
       }
       if (
-        searchState.multibox.value.includes('unlimited') &&
-        serverMultibox !== 0
-      ) {
-        return false;
-      }
-      if (
-        searchState.multibox.value.includes('limited') &&
-        !searchState.multibox.value.includes('unlimited') &&
+        searchState.multibox.includes('limited') &&
+        !searchState.multibox.includes('unlimited') &&
         serverMultibox < 2
       ) {
         return false;
