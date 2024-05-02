@@ -17,7 +17,7 @@ import {
 } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { fetchData, fetchDemo } from '../apiUtil';
+import { fetchDataFromBackend, fetchDemo } from '../apiUtil';
 import { AlertResponse } from '../components/Alert';
 import ErrorCard from '../components/ErrorCard';
 import ExpansionBar from '../components/ExpansionsBar';
@@ -41,7 +41,7 @@ export default function ServerDetails({
         if (id === 'demo') {
           data = await fetchDemo();
         } else {
-          data = await fetchData(`server/${id}`);
+          data = await fetchDataFromBackend(`server/${id}`);
         }
       } catch (err) {
         if (err instanceof Error) {

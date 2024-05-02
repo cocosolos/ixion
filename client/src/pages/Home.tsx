@@ -1,7 +1,4 @@
 import { Box } from '@mui/material';
-import { useEffect, useState } from 'react';
-import { fetchData } from '../apiUtil';
-import { AlertResponse } from '../components/Alert';
 import ErrorCard from '../components/ErrorCard';
 import ServerCard from '../components/ServerCard';
 import SearchState from '../data/SearchState';
@@ -9,39 +6,11 @@ import ServerData from '../data/ServerData';
 
 export default function Home({
   servers,
-  setServers,
   searchState,
-  setAlertInfo,
 }: {
   servers: ServerData[];
-  setServers: React.Dispatch<React.SetStateAction<ServerData[]>>;
   searchState: SearchState;
-  setAlertInfo: React.Dispatch<React.SetStateAction<AlertResponse>>;
 }) {
-  const [error, setError] = useState<string>('');
-
-  useEffect(() => {
-    const fetchServerData = async () => {
-      let data: ServerData[] = [];
-      try {
-        data = await fetchData();
-      } catch (err) {
-        if (err instanceof Error) {
-          setAlertInfo({
-            message: err.message,
-            severity: 'error',
-          });
-        } else {
-          setError('An unknown error occurred.');
-        }
-      }
-
-      setServers(data);
-    };
-
-    fetchServerData();
-  }, [setAlertInfo, setServers]);
-
   const filterServers = (server: ServerData): boolean => {
     if (searchState.name.length > 0) {
       const serverName = server.name.toLowerCase();
@@ -156,8 +125,8 @@ export default function Home({
 
   return (
     <Box>
-      {error || filteredServers.length === 0 ? (
-        <ErrorCard error={error} />
+      {filteredServers.length === 0 ? (
+        <ErrorCard error="" />
       ) : (
         filteredServers.map((server: ServerData) => (
           <ServerCard key={server.id} server={server} />

@@ -8,9 +8,9 @@ import {
   Typography,
 } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { fetchData } from '../apiUtil';
+import { fetchDataFromBackend } from '../apiUtil';
 import SearchState from '../data/SearchState';
 import ServerData from '../data/ServerData';
 import AddServer from './AddServer';
@@ -36,11 +36,11 @@ export default function Header({
     setShowSearchServer((prev) => !prev);
   };
 
-  const fetchServerData = async () => {
+  const fetchServerData = useCallback(async () => {
     let data: ServerData[] = [];
     try {
       setFetchLoading(25);
-      data = await fetchData();
+      data = await fetchDataFromBackend();
     } catch (err) {
       if (err instanceof Error) {
         setAlertInfo({
@@ -59,7 +59,11 @@ export default function Header({
     setTimeout(() => {
       setFetchLoading(0);
     }, 500);
-  };
+  }, [setFetchLoading, setAlertInfo, setServers]);
+
+  useEffect(() => {
+    fetchServerData();
+  }, [fetchServerData]);
 
   return (
     <Box>

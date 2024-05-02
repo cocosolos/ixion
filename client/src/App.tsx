@@ -36,14 +36,7 @@ export function App() {
           <Routes>
             <Route
               path="/"
-              element={
-                <Home
-                  servers={servers}
-                  setServers={setServers}
-                  searchState={searchState}
-                  setAlertInfo={setAlertInfo}
-                />
-              }
+              element={<Home servers={servers} searchState={searchState} />}
             />
             <Route
               path="/server/:id"

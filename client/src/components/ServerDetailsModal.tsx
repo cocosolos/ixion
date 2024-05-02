@@ -2,7 +2,7 @@ import { Info } from '@mui/icons-material';
 import { Card, IconButton, Tooltip, Typography } from '@mui/material';
 import Modal from '@mui/material/Modal';
 import { useState } from 'react';
-import { fetchData } from '../apiUtil';
+import { fetchDataFromBackend } from '../apiUtil';
 import ServerData from '../data/ServerData';
 import ServerSettingsDataGrid from './ServerSettingsDataGrid';
 
@@ -15,7 +15,7 @@ export default function ServerDetailsModal({ id }: { id: number }) {
     let data: ServerData;
     const fetchServerData = async () => {
       try {
-        data = await fetchData(`server/${id}`);
+        data = await fetchDataFromBackend(`server/${id}`);
       } catch (err) {
         if (err instanceof Error) {
           setError(err.message);
