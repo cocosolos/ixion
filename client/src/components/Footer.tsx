@@ -16,15 +16,41 @@ export default function Footer() {
   return (
     <Box className="bottom-0 w-full flex-none">
       <AppBar position="relative">
-        <Toolbar className="min-h-min justify-end">
-          <Tooltip title="About" arrow disableInteractive>
-            <IconButton component={Link} to="/about" onClick={scrollToTop}>
-              <QuestionMark />
-            </IconButton>
-          </Tooltip>
-          <IconButton onClick={switchColorMode}>
-            {theme.palette.mode === 'dark' ? <Brightness7 /> : <Brightness4 />}
-          </IconButton>
+        <Toolbar className="min-h-min justify-between">
+          <Box>
+            <Tooltip title="Support Me" arrow disableInteractive>
+              <a
+                href="https://ko-fi.com/A0A7WFPSL"
+                target="_blank"
+                rel="noreferrer"
+              >
+                <img
+                  style={{
+                    maxHeight: '2.5em',
+                    verticalAlign: 'middle',
+                  }}
+                  src="https://storage.ko-fi.com/cdn/brandasset/kofi_s_logo_nolabel.png"
+                  alt="Buy Me a Coffee at ko-fi.com"
+                />
+              </a>
+            </Tooltip>
+          </Box>
+          <Box>
+            <Tooltip title="About" arrow disableInteractive>
+              <IconButton component={Link} to="/about" onClick={scrollToTop}>
+                <QuestionMark />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Toggle Theme" arrow disableInteractive>
+              <IconButton onClick={switchColorMode}>
+                {theme.palette.mode === 'dark' ? (
+                  <Brightness7 />
+                ) : (
+                  <Brightness4 />
+                )}
+              </IconButton>
+            </Tooltip>
+          </Box>
         </Toolbar>
       </AppBar>
     </Box>
