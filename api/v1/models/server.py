@@ -81,7 +81,7 @@ class Server(models.Model):
 
         # Check if formatted server URL is unique
         existing_server = Server.objects.filter(url=self.url).first()
-        if existing_server:
+        if existing_server and not self.created:
             raise ValidationError("A server with this URL already exists.")
 
         # Validate the server API
