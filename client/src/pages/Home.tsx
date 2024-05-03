@@ -129,7 +129,7 @@ export default function Home({
         <ErrorCard error="" />
       ) : (
         filteredServers.map((server: ServerData) => (
-          <ServerCard key={server.id} server={server} />
+          <ServerCard key={server.url} server={server} />
         ))
       )}
     </Box>

@@ -183,7 +183,7 @@ export default function SearchServers({
           flexDirection="column"
           alignItems="center"
         >
-          <Typography id="max-level-slider" variant="caption">
+          <Typography id="max-level" variant="caption">
             Max Level
           </Typography>
         </Grid>
@@ -194,15 +194,16 @@ export default function SearchServers({
             onChange={handleSearchMaxLevelMin}
             // onBlur={handleBlur}
             inputProps={{
+              name: 'max-level-min',
               step: 1,
               min: 1,
               max: 99,
               type: 'number',
-              'aria-labelledby': 'max-level-min',
+              'aria-labelledby': 'max-level',
             }}
           />
           <Slider
-            aria-labelledby="max-level-slider"
+            aria-labelledby="max-level"
             value={searchState.maxLevel}
             onChange={handleSearchMaxLevel}
             valueLabelDisplay="auto"
@@ -218,11 +219,12 @@ export default function SearchServers({
             onChange={handleSearchMaxLevelMax}
             // onBlur={handleBlur}
             inputProps={{
+              name: 'max-level-max',
               step: 1,
               min: 1,
               max: 99,
               type: 'number',
-              'aria-labelledby': 'max-level-max',
+              'aria-labelledby': 'max-level',
             }}
           />
         </Grid>

@@ -12,7 +12,6 @@ export interface ServerSettings {
 }
 
 export default interface ServerData {
-  id: number;
   name: string;
   url: string;
   location: string;
@@ -26,7 +25,6 @@ export default interface ServerData {
 }
 
 export const DemoServerData: ServerData = {
-  id: 0,
   name: 'LandSandBoat Demo',
   url: 'github.com/LandSandBoat/server',
   location: 'NA',

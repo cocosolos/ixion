@@ -26,23 +26,34 @@ export const fetchDataFromBackend = async (
   queryParams = {}
 ) => {
   const queryString = new URLSearchParams(queryParams).toString();
-  const url = `${import.meta.env.PROD ? 'https://api.ixion.dev' : 'http://localhost:8000'}/${dir}/${queryString ? `?${queryString}` : ''}`;
+  const url = `${import.meta.env.PROD ? 'https://api.ixion.dev' : 'http://localhost:8000'}/${dir}${queryString ? `?${queryString}` : ''}`;
   try {
     const response = await fetch(url, {
       signal: AbortSignal.timeout(5000),
     });
+
     if (!response.ok) {
-      throw new Error(
-        `(${response.status.toString()} - ${response.statusText || 'unknown'})`
-      );
+      let errorMessage =
+        'An unknown error occurred while fetching data from the backend.';
+
+      // Check if the response has JSON content
+      const contentType = response.headers.get('content-type');
+      if (contentType && contentType.includes('application/json')) {
+        const errorData = await response.json();
+        errorMessage = errorData.url || errorData.detail;
+      }
+
+      throw new Error(errorMessage);
     }
 
     return await response.json();
   } catch (err) {
     if (err instanceof Error) {
-      throw new Error(`${err.message} - ${url}`);
+      throw new Error(err.message);
     } else {
-      throw new Error('Something went wrong.');
+      throw new Error(
+        'An unhandled error occurred while fetching data from the backend.'
+      );
     }
   }
 };
@@ -59,7 +70,7 @@ export const postData = async (inputText: string) => {
         body: JSON.stringify({ url: inputText }),
       }
     );
-    let message = `Server verification failed!`;
+    let message = `An unknown error occurred while sending data to the backend.`;
     let success = false;
     if (!response.ok) {
       // bad url or duplicate
@@ -73,13 +84,13 @@ export const postData = async (inputText: string) => {
       };
     }
     const responseData = await response.json();
-    if (responseData.id !== null) {
+    if (response.status === 201) {
       message = 'Added new server!';
       success = true;
     }
     return { message, success, data: responseData };
   } catch (err) {
-    let message = 'An unknown error occurred.';
+    let message = 'An unhandled error while sending data to the backend.';
     if (err instanceof Error) {
       message = err.message;
     }

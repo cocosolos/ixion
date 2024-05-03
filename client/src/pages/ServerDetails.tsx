@@ -30,7 +30,7 @@ export default function ServerDetails({
 }: {
   setAlertInfo: React.Dispatch<React.SetStateAction<AlertResponse>>;
 }) {
-  const { id } = useParams();
+  const { url } = useParams();
   const [server, setServer] = useState<ServerData>();
   const [error, setError] = useState<string>('');
 
@@ -38,10 +38,10 @@ export default function ServerDetails({
     let data: ServerData;
     const fetchServerData = async () => {
       try {
-        if (id === 'demo') {
+        if (url === 'demo') {
           data = await fetchDemo();
         } else {
-          data = await fetchDataFromBackend(`server/${id}`);
+          data = await fetchDataFromBackend(`server/?url=${url}`);
         }
       } catch (err) {
         if (err instanceof Error) {
@@ -58,7 +58,7 @@ export default function ServerDetails({
     };
 
     fetchServerData();
-  }, [id, setServer, setAlertInfo, setError]);
+  }, [url, setServer, setAlertInfo, setError]);
 
   const [clipboardTooltip, setClipboardTooltip] = useState('Copy server URL.');
   const [clipboardTooltipOpen, setClipboardTooltipOpen] = useState(false);
@@ -93,12 +93,12 @@ export default function ServerDetails({
     }
   };
 
-  function formatExternalUrl(url: string): string {
+  function formatExternalUrl(serverUrl: string): string {
     // prepend 'https://' to the URL if it's not already there
-    if (!/^https?:\/\//i.test(url)) {
-      return `https://${url}`;
+    if (!/^https?:\/\//i.test(serverUrl)) {
+      return `https://${serverUrl}`;
     }
-    return url;
+    return serverUrl;
   }
 
   return (

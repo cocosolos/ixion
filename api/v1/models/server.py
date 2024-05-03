@@ -1,14 +1,13 @@
 import datetime
 import json
-import os
-import socket
 import requests
 from django.db import models
 from django.core.validators import URLValidator
-from django.core.exceptions import ValidationError
 from urllib.parse import urlparse
 from v1.common.logging import logger
 from django.contrib.gis.geoip2 import GeoIP2
+from django.core.exceptions import ValidationError
+
 
 # Required and recommended settings used to build the initial client server card
 required_settings = [
@@ -39,9 +38,11 @@ class OptionalSchemeURLValidator(URLValidator):
 class Server(models.Model):
     name = models.CharField(max_length=255, null=True, editable=False)
     url = models.CharField(
+        primary_key=True,
         max_length=255,
         null=False,
         validators=[OptionalSchemeURLValidator()],
+        error_messages={"unique": "A server with this URL already exists."},
     )
     location = models.CharField(max_length=255, null=True, editable=False)
     max_level = models.IntegerField(null=True, editable=False)
@@ -55,8 +56,11 @@ class Server(models.Model):
 
     @property
     def expires(self):
-        time_since_creation = self.updated - self.created
-        return self.updated + min(time_since_creation, datetime.timedelta(hours=24))
+        try:
+            time_since_creation = self.updated - self.created
+            return self.updated + min(time_since_creation, datetime.timedelta(hours=24))
+        except:
+            return datetime.datetime(0, 1, 1, 0, 0, 0)
 
     def _str_(self):
         return self.url
@@ -70,13 +74,10 @@ class Server(models.Model):
         parsed_url = urlparse(self.url)
         self.url = parsed_url.netloc.lower()
 
-        # Check if server URL is unique
-        existing_server = Server.objects.filter(url=self.url).first()
-        if existing_server and existing_server.pk != self.pk:
-            raise ValidationError("A server with this URL already exists.")
-
         # Validate the server API
         if not self.parse_server_api():
+            if not self.created:
+                raise ValidationError("Server verification failed.")
             if self.expires <= datetime.datetime.now(datetime.timezone.utc):
                 return False
             self.up = False

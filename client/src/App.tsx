@@ -39,7 +39,7 @@ export function App() {
               element={<Home servers={servers} searchState={searchState} />}
             />
             <Route
-              path="/server/:id"
+              path="/server/:url"
               element={<ServerDetails setAlertInfo={setAlertInfo} />}
             />
             <Route path="/about" element={<About />} />

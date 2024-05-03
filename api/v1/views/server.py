@@ -1,7 +1,11 @@
+from django.http import Http404
 from rest_framework import viewsets, mixins
+from rest_framework.response import Response
 from django.db.models.fields.json import KT
 from v1.serializers.server import ServerDetailsSerializer, ServerSerializer
 from v1.models.server import Server
+from rest_framework import status
+from django.core.exceptions import ValidationError
 
 
 class ServerViewSet(
@@ -43,8 +47,53 @@ class ServerViewSet(
 
 
 class ServerDetailsViewSet(
+    mixins.CreateModelMixin,
     mixins.RetrieveModelMixin,
+    mixins.ListModelMixin,
     viewsets.GenericViewSet,
 ):
     queryset = Server.objects.all()
     serializer_class = ServerDetailsSerializer
+
+    def get_object(self):
+        queryset = self.filter_queryset(self.get_queryset())
+        url_param = self.request.query_params.get("url")
+        if url_param is not None:
+            try:
+                return queryset.get(url=url_param)
+            except Server.DoesNotExist:
+                raise Http404("Server not found with the provided URL.")
+        return super().get_object()
+
+    def create_server(self, url_param):
+        try:
+            serializer = self.get_serializer(data={"url": url_param})
+            serializer.is_valid(raise_exception=True)
+            self.perform_create(serializer)
+            return serializer.instance
+        except ValidationError as e:
+            raise Http404(e.message)
+
+    def create(self, request, *args, **kwargs):
+        url_param = request.data.get("url")
+        if url_param:
+            try:
+                server = Server.objects.get(url=url_param)
+                serializer = self.get_serializer(server)
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            except Server.DoesNotExist:
+                instance = self.create_server(url_param)
+                serializer = self.get_serializer(instance)
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+        url_param = self.request.query_params.get("url")
+        if url_param is not None:
+            queryset = queryset.filter(url=url_param)
+            if not queryset.exists():
+                instance = self.create_server(url_param)
+                serializer = self.get_serializer(instance)
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return self.retrieve(request, *args, **kwargs)
+        raise Http404("No URL provided.")

@@ -330,7 +330,7 @@ export default function ServerCard({ server }: { server: ServerData }) {
           <Tooltip title="View full settings." arrow disableInteractive>
             <IconButton
               component={Link}
-              to={`/server/${server.id}`}
+              to={`/server/${encodeURIComponent(server.url)}`}
               onClick={scrollToTop}
               className="p-0"
               disableRipple

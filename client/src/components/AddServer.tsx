@@ -73,7 +73,7 @@ export default function AddServer({
           severity: 'success',
         });
         if (response.data && typeof response.data === 'object') {
-          navigate(`/server/${response.data.id}`);
+          navigate(`/server/${encodeURIComponent(response.data.url)}`);
           setServers([response.data, ...servers]);
         }
         if (inputRef.current) {
@@ -119,7 +119,11 @@ export default function AddServer({
               <StyledInputBase
                 inputRef={inputRef}
                 placeholder="URL"
-                inputProps={{ 'aria-label': 'add-server' }}
+                autoComplete="off"
+                inputProps={{
+                  name: 'server-url',
+                  'aria-label': 'add-server',
+                }}
                 onKeyUp={handleKeyUp}
                 disabled={isLoading}
                 endAdornment={
