@@ -35,6 +35,11 @@ class OptionalSchemeURLValidator(URLValidator):
         super(OptionalSchemeURLValidator, self).__call__(value)
 
 
+# TODO: Validation should be probably be moved to `clean` method instead of `save`.
+# Currently the serializer handles ValidationError during input, and the only
+# other thing calling `save` should be the management tasks which should already
+# be validated so should be safe?
+# https://docs.djangoproject.com/en/5.0/ref/models/instances/#validating-objects
 class Server(models.Model):
     name = models.CharField(max_length=255, null=True, editable=False)
     url = models.CharField(
@@ -73,6 +78,11 @@ class Server(models.Model):
         # Extract the domain name from the validated URL
         parsed_url = urlparse(self.url)
         self.url = parsed_url.netloc.lower()
+
+        # Check if formatted server URL is unique
+        existing_server = Server.objects.filter(url=self.url).first()
+        if existing_server:
+            raise ValidationError("A server with this URL already exists.")
 
         # Validate the server API
         if not self.parse_server_api():

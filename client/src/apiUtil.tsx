@@ -76,7 +76,7 @@ export const postData = async (inputText: string) => {
       // bad url or duplicate
       if (response.status === 400) {
         const responseData = await response.json();
-        message = responseData.url;
+        message = responseData.url || responseData.detail;
       }
       return {
         message,

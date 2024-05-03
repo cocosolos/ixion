@@ -58,7 +58,8 @@ class ServerDetailsViewSet(
     def get_object(self):
         queryset = self.filter_queryset(self.get_queryset())
         url_param = self.request.query_params.get("url")
-        if url_param is not None:
+        if url_param:
+            url_param = url_param.lower()
             try:
                 return queryset.get(url=url_param)
             except Server.DoesNotExist:
@@ -66,34 +67,43 @@ class ServerDetailsViewSet(
         return super().get_object()
 
     def create_server(self, url_param):
-        try:
-            serializer = self.get_serializer(data={"url": url_param})
-            serializer.is_valid(raise_exception=True)
-            self.perform_create(serializer)
-            return serializer.instance
-        except ValidationError as e:
-            raise Http404(e.message)
+        serializer = self.get_serializer(data={"url": url_param})
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        return serializer.instance
 
     def create(self, request, *args, **kwargs):
         url_param = request.data.get("url")
         if url_param:
+            url_param = url_param.lower()
             try:
                 server = Server.objects.get(url=url_param)
                 serializer = self.get_serializer(server)
                 return Response(serializer.data, status=status.HTTP_200_OK)
             except Server.DoesNotExist:
-                instance = self.create_server(url_param)
-                serializer = self.get_serializer(instance)
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
+                try:
+                    instance = self.create_server(url_param)
+                    serializer = self.get_serializer(instance)
+                    return Response(serializer.data, status=status.HTTP_201_CREATED)
+                except ValidationError as e:
+                    return Response(
+                        {"url": e.messages}, status=status.HTTP_400_BAD_REQUEST
+                    )
 
     def list(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())
         url_param = self.request.query_params.get("url")
-        if url_param is not None:
+        if url_param:
+            url_param = url_param.lower()
             queryset = queryset.filter(url=url_param)
             if not queryset.exists():
-                instance = self.create_server(url_param)
-                serializer = self.get_serializer(instance)
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
+                try:
+                    instance = self.create_server(url_param)
+                    serializer = self.get_serializer(instance)
+                    return Response(serializer.data, status=status.HTTP_201_CREATED)
+                except ValidationError as e:
+                    return Response(
+                        {"url": e.messages}, status=status.HTTP_400_BAD_REQUEST
+                    )
             return self.retrieve(request, *args, **kwargs)
         raise Http404("No URL provided.")
