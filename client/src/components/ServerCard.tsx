@@ -124,7 +124,7 @@ export default function ServerCard({ server, children }: ServerCardProps) {
         >
           <Box className="flex flex-col items-center justify-center">
             <Box className="flex content-center">
-              {server.customizations['LOGIN.MAINT_MODE'] === 1 ? (
+              {server.settings_summary['LOGIN.MAINT_MODE'] === 1 ? (
                 <Tooltip
                   arrow
                   disableInteractive
@@ -183,13 +183,13 @@ export default function ServerCard({ server, children }: ServerCardProps) {
               >
                 {server.name}
               </Typography>
-              {typeof server.customizations['API.WEBSITE'] === 'string' &&
-                server.customizations['API.WEBSITE'] !== '' && (
+              {typeof server.settings_summary['API.WEBSITE'] === 'string' &&
+                server.settings_summary['API.WEBSITE'] !== '' && (
                   <Tooltip arrow disableInteractive title="Visit website.">
                     <IconButton
                       component={Link}
                       to={formatExternalUrl(
-                        server.customizations['API.WEBSITE']
+                        server.settings_summary['API.WEBSITE']
                       )}
                       target="_blank"
                       rel="noopener"
@@ -259,11 +259,11 @@ export default function ServerCard({ server, children }: ServerCardProps) {
           </Box>
         </AccordionSummary>
         <AccordionDetails className="p-2">
-          {server.customizations['MAIN.SERVER_MESSAGE'] && (
+          {server.settings_summary['MAIN.SERVER_MESSAGE'] && (
             <>
               <Box className="flex justify-center">
                 <Typography variant="body2">
-                  {server.customizations['MAIN.SERVER_MESSAGE']}
+                  {server.settings_summary['MAIN.SERVER_MESSAGE']}
                 </Typography>
               </Box>
               <Divider sx={{ marginY: 1 }} />

@@ -29,10 +29,10 @@ export default function Home({
 
     if (
       searchState.trusts &&
-      typeof server.customizations['MAIN.ENABLE_TRUST_CASTING'] === 'number'
+      typeof server.settings_summary['MAIN.ENABLE_TRUST_CASTING'] === 'number'
     ) {
       const serverTrusts =
-        server.customizations['MAIN.ENABLE_TRUST_CASTING'] === 1;
+        server.settings_summary['MAIN.ENABLE_TRUST_CASTING'] === 1;
       const searchEnabled = searchState.trusts.includes('enabled');
       const searchDisabled = searchState.trusts.includes('disabled');
       if (serverTrusts && searchDisabled && !searchEnabled) {
@@ -45,9 +45,9 @@ export default function Home({
 
     if (
       searchState.levelSync &&
-      typeof server.customizations['MAP.LEVEL_SYNC_ENABLE'] === 'boolean'
+      typeof server.settings_summary['MAP.LEVEL_SYNC_ENABLE'] === 'boolean'
     ) {
-      const serverLevelSync = server.customizations['MAP.LEVEL_SYNC_ENABLE'];
+      const serverLevelSync = server.settings_summary['MAP.LEVEL_SYNC_ENABLE'];
       const searchEnabled = searchState.levelSync.includes('enabled');
       const searchDisabled = searchState.levelSync.includes('disabled');
       if (serverLevelSync && searchDisabled && !searchEnabled) {
@@ -59,45 +59,32 @@ export default function Home({
     }
 
     if (searchState.expansions) {
-      const searchNoneEnabled = searchState.expansions.includes('none');
-      const searchRotzEnabled = searchState.expansions.includes('rotz');
-      const serverRotzEnabled =
-        server.customizations['LOGIN.RISE_OF_ZILART'] === true;
-      const searchCopEnabled = searchState.expansions.includes('cop');
-      const serverCopEnabled =
-        server.customizations['LOGIN.CHAINS_OF_PROMATHIA'] === true;
-      const searchToauEnabled = searchState.expansions.includes('toau');
-      const serverToauEnabled =
-        server.customizations['LOGIN.TREASURES_OF_AHT_URGHAN'] === true;
-      const searchWotgEnabled = searchState.expansions.includes('wotg');
-      const serverWotgEnabled =
-        server.customizations['LOGIN.WINGS_OF_THE_GODDESS'] === true;
-      const searchSoaEnabled = searchState.expansions.includes('soa');
-      const serverSoaEnabled =
-        server.customizations['LOGIN.SEEKERS_OF_ADOULIN'] === true;
+      if (!server.expansions) {
+        return false;
+      }
       if (
-        searchNoneEnabled &&
-        (serverRotzEnabled ||
-          serverCopEnabled ||
-          serverToauEnabled ||
-          serverWotgEnabled ||
-          serverSoaEnabled)
+        searchState.expansions.includes('none') &&
+        (server.expansions.rotz ||
+          server.expansions.cop ||
+          server.expansions.toau ||
+          server.expansions.wotg ||
+          server.expansions.soa)
       ) {
         return false;
       }
-      if (searchRotzEnabled !== serverRotzEnabled) {
+      if (searchState.expansions.includes('rotz') && server.expansions.rotz) {
         return false;
       }
-      if (searchCopEnabled !== serverCopEnabled) {
+      if (searchState.expansions.includes('cop') && server.expansions.cop) {
         return false;
       }
-      if (searchToauEnabled !== serverToauEnabled) {
+      if (searchState.expansions.includes('toau') && server.expansions.toau) {
         return false;
       }
-      if (searchWotgEnabled !== serverWotgEnabled) {
+      if (searchState.expansions.includes('wotg') && server.expansions.wotg) {
         return false;
       }
-      if (searchSoaEnabled !== serverSoaEnabled) {
+      if (searchState.expansions.includes('soa') && server.expansions.soa) {
         return false;
       }
     }

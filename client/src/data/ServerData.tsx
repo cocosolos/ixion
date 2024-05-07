@@ -16,8 +16,9 @@ export type ServerData = {
   url: string;
   location: string;
   max_level: number;
+  expansions: ServerSettings;
   settings?: ServerSettings;
-  customizations: ServerSettings;
+  settings_summary: ServerSettings;
   login_limit: number;
   active_sessions: number;
   updated: string;
@@ -29,8 +30,22 @@ export const DemoServerData: ServerData = {
   url: 'github.com/LandSandBoat/server',
   location: 'NA',
   max_level: 99,
+  expansions: {
+    rotz: true,
+    cop: true,
+    toau: true,
+    wotg: true,
+    soa: true,
+    acp: true,
+    amk: true,
+    asa: true,
+    abyssea: true,
+    voidwatch: true,
+    rov: true,
+    tvr: true,
+  },
   settings: LsbDefaults,
-  customizations: {
+  settings_summary: {
     'API.WEBSITE': 'https://landsandboat.github.io/server/',
     'MAIN.ENABLE_TRUST_CASTING': 1,
     'MAP.LEVEL_SYNC_ENABLE': true,

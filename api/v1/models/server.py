@@ -17,14 +17,30 @@ required_settings = [
 ]
 
 recommended_settings = [
+    "LOGIN.CLIENT_VER",
     "MAIN.ENABLE_TRUST_CASTING",
+    "MAIN.HOMEPOINT_TELEPORT",
+    "MAIN.ENABLE_SURVIVAL_GUIDE",
     "MAP.LEVEL_SYNC_ENABLE",
-    "LOGIN.RISE_OF_ZILART",
-    "LOGIN.CHAINS_OF_PROMATHIA",
-    "LOGIN.TREASURES_OF_AHT_URGHAN",
-    "LOGIN.WINGS_OF_THE_GODDESS",
-    "LOGIN.SEEKERS_OF_ADOULIN",
+    "MAIN.ENABLE_ROE",
+    "MAIN.ENABLE_FIELD_MANUALS",
+    "MAIN.ENABLE_GROUNDS_TOMES",
 ]
+
+expansions_settings = {
+    "LOGIN.RISE_OF_ZILART": "rotz",
+    "LOGIN.CHAINS_OF_PROMATHIA": "cop",
+    "LOGIN.TREASURES_OF_AHT_URGHAN": "toau",
+    "LOGIN.WINGS_OF_THE_GODDESS": "wotg",
+    "LOGIN.SEEKERS_OF_ADOULIN": "soa",
+    "MAIN.ENABLE_ACP": "acp",
+    "MAIN.ENABLE_AMK": "amk",
+    "MAIN.ENABLE_ASA": "asa",
+    "MAIN.ENABLE_ABYSSEA": "abyssea",
+    "MAIN.ENABLE_VOIDWATCH": "voidwatch",
+    "MAIN.ENABLE_ROV": "rov",
+    "MAIN.ENABLE_TVR": "tvr",
+}
 
 
 class OptionalSchemeURLValidator(URLValidator):
@@ -51,8 +67,9 @@ class Server(models.Model):
     )
     location = models.CharField(max_length=255, null=True, editable=False)
     max_level = models.IntegerField(null=True, editable=False)
+    expansions = models.JSONField(null=True, editable=False)
     settings = models.JSONField(null=True, editable=False)
-    customizations = models.JSONField(null=True, editable=False)
+    settings_summary = models.JSONField(null=True, editable=False)
     login_limit = models.IntegerField(null=True, editable=False)
     active_sessions = models.IntegerField(null=True, editable=False)
     created = models.DateTimeField(auto_now_add=True)
@@ -119,30 +136,39 @@ class Server(models.Model):
             self.max_level = server_settings["MAIN.MAX_LEVEL"]
             self.login_limit = server_settings["LOGIN.LOGIN_LIMIT"]
 
-            # Check customizations
             with open("defaultLsbSettings.json", "r") as default_settings_file:
                 default_settings = json.load(default_settings_file)
-            customizations = {}
 
-            customizations["LOGIN.CLIENT_VER"] = server_settings["LOGIN.CLIENT_VER"]
+            expansions = {}
+            for setting in expansions_settings:
+                expansions[expansions_settings[setting]] = (
+                    True if server_settings[setting] else False
+                )
 
+            settings_summary = {}
+            for setting in recommended_settings:
+                if server_settings[setting]:
+                    settings_summary[setting] = server_settings[setting]
+            # Check customizations
             for key, value in server_settings.items():
-                if key not in required_settings and (
-                    key in recommended_settings
-                    or key not in default_settings
-                    or default_settings[key] != value
+                if (
+                    key not in required_settings
+                    and key not in recommended_settings
+                    and key not in expansions_settings
+                    and (key not in default_settings or default_settings[key] != value)
                 ):
-                    customizations[key] = value
+                    settings_summary[key] = value
 
-            self.customizations = customizations
+            self.expansions = expansions
             self.settings = server_settings
+            self.settings_summary = settings_summary
 
             # Request the active session count from API
             response = requests.get(f"http://{self.url}/api/sessions")
             response.raise_for_status()
-            session_count = response.text
-            if session_count.isdigit():
-                self.active_sessions = int(session_count)
+            active_sessions = response.text
+            if active_sessions.isdigit():
+                self.active_sessions = int(active_sessions)
 
             # Test other server ports (you can actually change all of these?)
             # ports_to_check = [

@@ -55,13 +55,15 @@ export default function ExpansionBar({ server }: ExpansionBarProps) {
   return (
     <ToggleButtonGroup
       size="small"
-      value={[
-        server.customizations['LOGIN.RISE_OF_ZILART'] && 'rotz',
-        server.customizations['LOGIN.CHAINS_OF_PROMATHIA'] && 'cop',
-        server.customizations['LOGIN.TREASURES_OF_AHT_URGHAN'] && 'toau',
-        server.customizations['LOGIN.WINGS_OF_THE_GODDESS'] && 'wotg',
-        server.customizations['LOGIN.SEEKERS_OF_ADOULIN'] && 'soa',
-      ]}
+      value={
+        server.expansions && [
+          server.expansions.rotz && 'rotz',
+          server.expansions.cop && 'cop',
+          server.expansions.toau && 'toau',
+          server.expansions.wotg && 'wotg',
+          server.expansions.soa && 'soa',
+        ]
+      }
       sx={{ '& button': { lineHeight: 1.0 } }}
     >
       {expansions}

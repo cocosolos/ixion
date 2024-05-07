@@ -80,7 +80,7 @@ export default function SettingsChipCloud({ server }: SettingsChipCloudProps) {
         maxWidth: '100%',
       }}
     >
-      {Object.entries(server.customizations).map(renderSettingsChip)}
+      {Object.entries(server.settings_summary).map(renderSettingsChip)}
     </Box>
   );
 }

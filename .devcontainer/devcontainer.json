@@ -21,7 +21,7 @@
     "ghcr.io/devcontainers/features/docker-outside-of-docker:latest": {}
   },
   "mounts": [
-    "source=vscode-extensions,target=/root/.vscode-server/extensions,type=volume",
+    "source=vscode-extensions,target=/root/.vscode-server/extensions,type=volume"
   ],
   "customizations": {
     "vscode": {
