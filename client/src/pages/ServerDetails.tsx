@@ -2,17 +2,14 @@ import { Box } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { fetchDataFromBackend, fetchDemo } from '../apiUtil';
-import { AlertResponse } from '../components/Alert';
 import ErrorCard from '../components/ErrorCard';
 import SettingsDataGrid from '../components/Server/SettingsDataGrid';
 import ServerCard from '../components/ServerCard';
+import { useLoadingContext } from '../context/LoadingContext';
 import { ServerData } from '../data/ServerData';
 
-export default function ServerDetails({
-  setAlertInfo,
-}: {
-  setAlertInfo: React.Dispatch<React.SetStateAction<AlertResponse>>;
-}) {
+export default function ServerDetails() {
+  const { showAlert } = useLoadingContext();
   const { url } = useParams();
   const [server, setServer] = useState<ServerData>();
   const [error, setError] = useState<string>('');
@@ -28,7 +25,7 @@ export default function ServerDetails({
         }
       } catch (err) {
         if (err instanceof Error) {
-          setAlertInfo({
+          showAlert({
             message: err.message,
             severity: 'error',
           });
@@ -41,7 +38,7 @@ export default function ServerDetails({
     };
 
     fetchServerData();
-  }, [url, setServer, setAlertInfo, setError]);
+  }, [url, setServer, showAlert, setError]);
 
   return (
     <Box>

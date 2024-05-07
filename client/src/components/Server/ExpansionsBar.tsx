@@ -49,7 +49,9 @@ const expansions = [
   </ToggleButton>,
 ];
 
-export default function ExpansionBar({ server }: { server: ServerData }) {
+type ExpansionBarProps = { server: ServerData };
+
+export default function ExpansionBar({ server }: ExpansionBarProps) {
   return (
     <ToggleButtonGroup
       size="small"

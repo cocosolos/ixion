@@ -11,26 +11,26 @@ import IconButton from '@mui/material/IconButton';
 import { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { fetchDataFromBackend } from '../apiUtil';
+import { useLoadingContext } from '../context/LoadingContext';
 import { SearchState } from '../data/SearchState';
 import { ServerData } from '../data/ServerData';
 import AddServer from './AddServer';
-import { AlertResponse } from './Alert';
 import SearchServers from './SearchServers';
 
-export default function Header({
-  setAlertInfo,
-  servers,
-  setServers,
-  searchState,
-  setSearchState,
-}: {
-  setAlertInfo: React.Dispatch<React.SetStateAction<AlertResponse>>;
+type HeaderProps = {
   servers: ServerData[];
   setServers: React.Dispatch<React.SetStateAction<ServerData[]>>;
   searchState: SearchState;
   setSearchState: React.Dispatch<React.SetStateAction<SearchState>>;
-}) {
-  const [fetchLoading, setFetchLoading] = useState(0);
+};
+
+export default function Header({
+  servers,
+  setServers,
+  searchState,
+  setSearchState,
+}: HeaderProps) {
+  const { progress, setProgress, showAlert } = useLoadingContext();
   const [showSearchServer, setShowSearchServer] = useState(false);
   const toggleShowSearchServer = () => {
     setShowSearchServer((prev) => !prev);
@@ -39,27 +39,27 @@ export default function Header({
   const fetchServerData = useCallback(async () => {
     let data: ServerData[] = [];
     try {
-      setFetchLoading(25);
+      setProgress(25);
       data = await fetchDataFromBackend();
     } catch (err) {
       if (err instanceof Error) {
-        setAlertInfo({
+        showAlert({
           message: err.message,
           severity: 'error',
         });
       } else {
-        setAlertInfo({
+        showAlert({
           message: 'An unknown error occurred.',
           severity: 'error',
         });
       }
     }
     setServers(data);
-    setFetchLoading(100);
+    setProgress(100);
     setTimeout(() => {
-      setFetchLoading(0);
+      setProgress(0);
     }, 500);
-  }, [setFetchLoading, setAlertInfo, setServers]);
+  }, [showAlert, setServers, setProgress]);
 
   useEffect(() => {
     fetchServerData();
@@ -81,13 +81,9 @@ export default function Header({
           >
             IXION
           </Typography>
-          <AddServer
-            setAlertInfo={setAlertInfo}
-            servers={servers}
-            setServers={setServers}
-          />
+          <AddServer servers={servers} setServers={setServers} />
           <Tooltip arrow disableInteractive title="Refresh server data.">
-            <IconButton onClick={fetchServerData} disabled={fetchLoading !== 0}>
+            <IconButton onClick={fetchServerData} disabled={progress !== 0}>
               <Refresh />
             </IconButton>
           </Tooltip>
@@ -100,10 +96,10 @@ export default function Header({
       </AppBar>
       <LinearProgress
         variant="determinate"
-        value={fetchLoading}
+        value={progress}
         sx={{
-          visibility: fetchLoading === 0 ? 'hidden' : 'visible',
-          height: fetchLoading === 0 ? 0 : '1px',
+          visibility: progress === 0 ? 'hidden' : 'visible',
+          height: progress === 0 ? 0 : '1px',
         }}
       />
       <SearchServers

@@ -12,10 +12,6 @@ import NotFound from './pages/NotFound';
 import ServerDetails from './pages/ServerDetails';
 
 export function App() {
-  const [alertInfo, setAlertInfo] = useState<{
-    message: string;
-    severity: 'error' | 'warning' | 'info' | 'success';
-  } | null>(null);
   const [servers, setServers] = useState<ServerData[]>([]);
 
   const [searchState, setSearchState] =
@@ -24,13 +20,12 @@ export function App() {
   return (
     <div className="flex min-h-screen flex-col">
       <Header
-        setAlertInfo={setAlertInfo}
         servers={servers}
         setServers={setServers}
         searchState={searchState}
         setSearchState={setSearchState}
       />
-      <AlertComponent alertInfo={alertInfo} setAlertInfo={setAlertInfo} />
+      <AlertComponent />
       <Container className="grow p-0">
         <Box className="m-2">
           <Routes>
@@ -38,10 +33,7 @@ export function App() {
               path="/"
               element={<Home servers={servers} searchState={searchState} />}
             />
-            <Route
-              path="/server/:url"
-              element={<ServerDetails setAlertInfo={setAlertInfo} />}
-            />
+            <Route path="/server/:url" element={<ServerDetails />} />
             <Route path="/about" element={<About />} />
             <Route path="*" element={<NotFound />} />
           </Routes>

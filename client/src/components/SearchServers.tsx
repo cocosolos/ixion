@@ -12,15 +12,17 @@ import {
 import { useEffect, useRef, useState } from 'react';
 import { SearchState } from '../data/SearchState';
 
+type SearchServersProps = {
+  showSearchServer: boolean;
+  searchState: SearchState;
+  setSearchState: React.Dispatch<React.SetStateAction<SearchState>>;
+};
+
 export default function SearchServers({
   showSearchServer,
   searchState,
   setSearchState,
-}: {
-  showSearchServer: boolean;
-  searchState: SearchState;
-  setSearchState: React.Dispatch<React.SetStateAction<SearchState>>;
-}) {
+}: SearchServersProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [contentHeight, setContentHeight] = useState(0);
   const minDistance = 0;

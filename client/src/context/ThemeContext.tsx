@@ -16,7 +16,16 @@ type ThemeModeState = {
   setThemeMode: React.Dispatch<React.SetStateAction<ThemeMode>>;
 };
 
-export const ThemeModeContext = createContext<ThemeModeState | null>(null);
+const ThemeModeContext = createContext<ThemeModeState | null>(null);
+
+// eslint-disable-next-line react-refresh/only-export-components
+export function useThemeModeContext() {
+  const context = useContext(ThemeModeContext);
+  if (!context) {
+    throw new Error('Theme context error.');
+  }
+  return context;
+}
 
 type ThemeModeContextProviderProps = {
   children: ReactNode;
@@ -81,13 +90,4 @@ export function ThemeContextProvider({
       </ThemeModeContext.Provider>
     </StyledEngineProvider>
   );
-}
-
-// eslint-disable-next-line react-refresh/only-export-components
-export function useThemeModeContext() {
-  const context = useContext(ThemeModeContext);
-  if (!context) {
-    throw new Error('Theme context error.');
-  }
-  return context;
 }

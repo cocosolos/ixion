@@ -1,6 +1,8 @@
 import { Card, CardContent, Typography } from '@mui/material';
 
-export default function ErrorCard({ error }: { error: string }) {
+type ErrorCardProps = { error: string };
+
+export default function ErrorCard({ error }: ErrorCardProps) {
   return (
     <Card className="mb-2">
       <CardContent className="p-4">

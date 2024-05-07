@@ -12,8 +12,8 @@ import {
 import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { postData } from '../apiUtil';
+import { useLoadingContext } from '../context/LoadingContext';
 import { ServerData } from '../data/ServerData';
-import { AlertResponse } from './Alert';
 
 const AddServerInput = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -43,15 +43,13 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-export default function AddServer({
-  setAlertInfo,
-  servers,
-  setServers,
-}: {
-  setAlertInfo: React.Dispatch<React.SetStateAction<AlertResponse>>;
+type AddServerProps = {
   servers: ServerData[];
   setServers: React.Dispatch<React.SetStateAction<ServerData[]>>;
-}) {
+};
+
+export default function AddServer({ servers, setServers }: AddServerProps) {
+  const { showAlert } = useLoadingContext();
   const navigate = useNavigate();
   const containerRef = useRef<HTMLElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -68,7 +66,7 @@ export default function AddServer({
       setIsLoading(true);
       const response = await postData(inputText);
       if (response.success) {
-        setAlertInfo({
+        showAlert({
           message: response.message,
           severity: 'success',
         });
@@ -81,7 +79,7 @@ export default function AddServer({
           toggleShowAddServer();
         }
       } else {
-        setAlertInfo({
+        showAlert({
           message: response.message || 'Failed to send data to backend.',
           severity: 'error',
         });

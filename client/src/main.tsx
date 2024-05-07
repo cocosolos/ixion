@@ -3,6 +3,7 @@ import { StyledEngineProvider } from '@mui/material/styles';
 import { StrictMode } from 'react';
 import ReactDOM from 'react-dom/client';
 import { WrappedApp } from './App';
+import { LoadingContextProvider } from './context/LoadingContext';
 import { ThemeContextProvider } from './context/ThemeContext';
 import './index.css';
 
@@ -13,8 +14,10 @@ root.render(
   <StrictMode>
     <StyledEngineProvider injectFirst>
       <ThemeContextProvider>
-        <CssBaseline />
-        <WrappedApp />
+        <LoadingContextProvider>
+          <CssBaseline />
+          <WrappedApp />
+        </LoadingContextProvider>
       </ThemeContextProvider>
     </StyledEngineProvider>
   </StrictMode>

@@ -6,7 +6,9 @@ import {
   ServerSettingsInfo,
 } from '../../data/ServerData';
 
-export default function SettingsChipCloud({ server }: { server: ServerData }) {
+type SettingsChipCloudProps = { server: ServerData };
+
+export default function SettingsChipCloud({ server }: SettingsChipCloudProps) {
   const renderSettingsChip = ([key, value]: [
     string,
     boolean | string | number,
