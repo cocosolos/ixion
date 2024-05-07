@@ -1,5 +1,5 @@
 import { ToggleButton, ToggleButtonGroup } from '@mui/material';
-import { ServerData } from '../data/ServerData';
+import { ServerData } from '../../data/ServerData';
 
 const expansions = [
   <ToggleButton

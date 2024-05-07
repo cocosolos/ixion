@@ -4,7 +4,7 @@ import {
   ServerSetting,
   ServerSettings,
   ServerSettingsInfo,
-} from '../data/ServerData';
+} from '../../data/ServerData';
 
 type KeyValueRow = {
   id: number;
@@ -23,11 +23,13 @@ const columns: GridColDef[] = [
   { field: 'description', headerName: 'Description', flex: 6 },
 ];
 
-export default function ServerSettingsDataGrid({
-  serverSettings,
-}: {
+type SettingsDataGridProps = {
   serverSettings: ServerSettings;
-}) {
+};
+
+export default function SettingsDataGrid({
+  serverSettings,
+}: SettingsDataGridProps) {
   const transformValue = (
     v: boolean | string | number,
     setting: ServerSetting

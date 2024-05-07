@@ -1,5 +1,6 @@
 import { Box } from '@mui/material';
 import ErrorCard from '../components/ErrorCard';
+import SettingsChipCloud from '../components/Server/SettingsChipCloud';
 import ServerCard from '../components/ServerCard';
 import { SearchState } from '../data/SearchState';
 import { ServerData } from '../data/ServerData';
@@ -129,7 +130,9 @@ export default function Home({
         <ErrorCard error="" />
       ) : (
         filteredServers.map((server: ServerData) => (
-          <ServerCard key={server.url} server={server} />
+          <ServerCard key={server.url} server={server}>
+            <SettingsChipCloud server={server} />
+          </ServerCard>
         ))
       )}
     </Box>

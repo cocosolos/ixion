@@ -1,6 +1,5 @@
 import {
-  Check,
-  Close,
+  ArrowCircleUp,
   ContentCopy,
   ExpandMore,
   Info,
@@ -13,29 +12,40 @@ import {
   Box,
   Card,
   CardContent,
-  Chip,
   Divider,
   IconButton,
   Tooltip,
   Typography,
   alpha,
 } from '@mui/material';
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
 import {
-  ServerData,
-  ServerSetting,
-  ServerSettingsInfo,
-} from '../data/ServerData';
+  Children,
+  ElementType,
+  ReactNode,
+  isValidElement,
+  useState,
+} from 'react';
+import { Link } from 'react-router-dom';
+import { ServerData } from '../data/ServerData';
 import CopyImageIcon from '../images/copy-image.png';
-import { Accordion, AccordionDetails, AccordionSummary } from './Accordion';
-import ExpansionBar from './ExpansionsBar';
+import ExpansionBar from './Server/ExpansionsBar';
+import SettingsDataGrid from './Server/SettingsDataGrid';
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+} from './Themed/Accordion';
 
 function scrollToTop() {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-export default function ServerCard({ server }: { server: ServerData }) {
+type ServerCardProps = {
+  server: ServerData;
+  children: ReactNode;
+};
+
+export default function ServerCard({ server, children }: ServerCardProps) {
   const [clipboardTooltip, setClipboardTooltip] = useState('Copy server URL.');
   const [clipboardTooltipOpen, setClipboardTooltipOpen] = useState(false);
   const handleClipboardTooltipClose = () => {
@@ -77,72 +87,39 @@ export default function ServerCard({ server }: { server: ServerData }) {
     return url;
   }
 
-  const renderSettingsChip = ([key, value]: [
-    string,
-    boolean | string | number,
-  ]) => {
-    if (!ServerSettingsInfo[key]) return null;
-
-    const transformValue = (
-      v: boolean | string | number,
-      setting: ServerSetting
-    ): string | number | boolean => {
-      return setting.transform?.(v) ?? v;
-    };
-
-    let chipValue: string | number | boolean | JSX.Element = transformValue(
-      value,
-      ServerSettingsInfo[key]
+  // Check if this is a detailed server card with a data grid
+  const hasSpecificComponent = (
+    childrenProps: ReactNode,
+    componentType: ElementType
+  ): boolean => {
+    const childrenArray = Children.toArray(childrenProps);
+    return childrenArray.some(
+      (child) => isValidElement(child) && child.type === componentType
     );
-    if (typeof chipValue === 'boolean') {
-      chipValue = chipValue ? (
-        <Check color="success" />
-      ) : (
-        <Close color="error" />
-      );
+  };
+  const isSettingsDataGridChild = hasSpecificComponent(
+    children,
+    SettingsDataGrid
+  );
+  // Manually handle the accordion state to disable closing when detailed view
+  const [expand, setExpand] = useState(isSettingsDataGridChild);
+  const toggleAcordion = () => {
+    if (!isSettingsDataGridChild) {
+      setExpand((prev) => !prev);
     }
-
-    return (
-      <Tooltip
-        key={key}
-        arrow
-        disableInteractive
-        title={ServerSettingsInfo[key].description}
-      >
-        <Chip
-          label={`${ServerSettingsInfo[key].name === '' ? key : ServerSettingsInfo[key].name}`}
-          avatar={
-            typeof chipValue === 'object' ? undefined : (
-              <Chip label={chipValue} size="small" />
-            )
-          }
-          icon={typeof chipValue === 'object' ? chipValue : undefined}
-          size="small"
-          className="m-1 pr-1"
-          sx={{
-            '& .MuiChip-avatar': {
-              width: 'auto',
-              marginX: 0,
-              order: 2,
-            },
-            '& .MuiChip-icon': {
-              marginX: 0,
-              order: 2,
-            },
-            '&> .MuiChip-label': {
-              paddingRight: 0.5,
-            },
-            boxShadow: '0px 3px 3px rgba(0, 0, 0, .25)',
-          }}
-        />
-      </Tooltip>
-    );
   };
 
   return (
     <Card className="mb-2">
-      <Accordion className="my-0">
-        <AccordionSummary expandIcon={<ExpandMore />}>
+      <Accordion
+        className="my-0"
+        defaultExpanded={isSettingsDataGridChild}
+        expanded={expand}
+      >
+        <AccordionSummary
+          expandIcon={!isSettingsDataGridChild && <ExpandMore />}
+          onClick={toggleAcordion}
+        >
           <Box className="flex flex-col items-center justify-center">
             <Box className="flex content-center">
               {server.customizations['LOGIN.MAINT_MODE'] === 1 ? (
@@ -290,16 +267,7 @@ export default function ServerCard({ server }: { server: ServerData }) {
               <Divider sx={{ marginY: 1 }} />
             </>
           )}
-          <Box
-            sx={{
-              display: 'flex',
-              flexWrap: 'wrap',
-              justifyContent: 'center',
-              maxWidth: '100%',
-            }}
-          >
-            {Object.entries(server.customizations).map(renderSettingsChip)}
-          </Box>
+          {children}
         </AccordionDetails>
       </Accordion>
       <Divider />
@@ -328,7 +296,13 @@ export default function ServerCard({ server }: { server: ServerData }) {
         </Box>
         <Box className="flex items-center whitespace-nowrap">
           {/* <ServerDetailsModal id={server.id} /> */}
-          <Tooltip title="View full settings." arrow disableInteractive>
+          <Tooltip
+            title={
+              isSettingsDataGridChild ? 'Scroll to top.' : 'View full settings.'
+            }
+            arrow
+            disableInteractive
+          >
             <IconButton
               component={Link}
               to={`/server/${encodeURIComponent(server.url)}`}
@@ -336,7 +310,11 @@ export default function ServerCard({ server }: { server: ServerData }) {
               className="p-0"
               disableRipple
             >
-              <Info className="p-1" />
+              {isSettingsDataGridChild ? (
+                <ArrowCircleUp className="p-1" />
+              ) : (
+                <Info className="p-1" />
+              )}
             </IconButton>
           </Tooltip>
           <Typography variant="caption">
