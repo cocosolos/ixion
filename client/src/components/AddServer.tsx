@@ -12,7 +12,7 @@ import {
 import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { postData } from '../apiUtil';
-import ServerData from '../data/ServerData';
+import { ServerData } from '../data/ServerData';
 import { AlertResponse } from './Alert';
 
 const AddServerInput = styled('div')(({ theme }) => ({

@@ -10,7 +10,7 @@ import {
   Typography,
 } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
-import SearchState from '../data/SearchState';
+import { SearchState } from '../data/SearchState';
 
 export default function SearchServers({
   showSearchServer,

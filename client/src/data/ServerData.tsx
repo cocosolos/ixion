@@ -1,17 +1,17 @@
 import LsbDefaults from '../../../api/defaultLsbSettings.json';
 
-export interface ServerSetting {
+export type ServerSetting = {
   name: string;
   description: string;
   unit?: string;
   transform?: (arg: boolean | string | number) => boolean | string | number;
-}
+};
 
-export interface ServerSettings {
+export type ServerSettings = {
   [key: string]: boolean | string | number;
-}
+};
 
-export default interface ServerData {
+export type ServerData = {
   name: string;
   url: string;
   location: string;
@@ -22,7 +22,7 @@ export default interface ServerData {
   active_sessions: number;
   updated: string;
   up: boolean;
-}
+};
 
 export const DemoServerData: ServerData = {
   name: 'LandSandBoat Demo',

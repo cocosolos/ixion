@@ -3,7 +3,7 @@ import { Card, IconButton, Tooltip, Typography } from '@mui/material';
 import Modal from '@mui/material/Modal';
 import { useState } from 'react';
 import { fetchDataFromBackend } from '../apiUtil';
-import ServerData from '../data/ServerData';
+import { ServerData } from '../data/ServerData';
 import ServerSettingsDataGrid from './ServerSettingsDataGrid';
 
 export default function ServerDetailsModal({ id }: { id: number }) {

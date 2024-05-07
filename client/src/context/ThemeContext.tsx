@@ -1,83 +1,93 @@
 import { useMediaQuery } from '@mui/material';
 import { createTheme, StyledEngineProvider } from '@mui/material/styles';
 import ThemeProvider from '@mui/material/styles/ThemeProvider';
-import { createContext, ReactNode, useEffect, useMemo, useState } from 'react';
+import React, {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 
-type ThemeContextType = {
-  switchColorMode: () => void;
+export type ThemeMode = 'dark' | 'light';
+
+type ThemeModeState = {
+  themeMode: ThemeMode;
+  setThemeMode: React.Dispatch<React.SetStateAction<ThemeMode>>;
 };
 
-type ThemeProviderProps = {
+export const ThemeModeContext = createContext<ThemeModeState | null>(null);
+
+type ThemeModeContextProviderProps = {
   children: ReactNode;
 };
 
-export const ThemeContext = createContext<ThemeContextType>({
-  switchColorMode: () => {},
-});
-
-export function ThemeContextProvider({ children }: ThemeProviderProps) {
+export function ThemeContextProvider({
+  children,
+}: ThemeModeContextProviderProps) {
   const rootElement = document.getElementById('root');
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
-  const [mode, setMode] = useState<'light' | 'dark'>(() => {
-    const manualTheme = localStorage.getItem('theme');
-    if (manualTheme && (manualTheme === 'light' || manualTheme === 'dark')) {
-      return manualTheme;
+  const [themeMode, setThemeMode] = useState<ThemeMode>(() => {
+    const manualThemeMode = localStorage.getItem('themeMode') as ThemeMode;
+    if (manualThemeMode) {
+      return manualThemeMode;
     }
     return prefersDarkMode ? 'dark' : 'light';
   });
 
   useEffect(() => {
-    localStorage.setItem('theme', mode);
-  }, [mode]);
+    localStorage.setItem('themeMode', themeMode as ThemeMode);
+  }, [themeMode]);
 
-  const switchColorMode = () => {
-    setMode((prevMode) => (prevMode === 'light' ? 'dark' : 'light'));
-  };
-
-  const theme = useMemo(
-    () =>
-      createTheme({
-        palette: {
-          mode,
+  const muiTheme = createTheme({
+    palette: {
+      mode: themeMode,
+    },
+    // All `Portal`-related components need to have the the main app wrapper element as a container
+    // so that they are in the subtree under the element used in the `important` option of the Tailwind's config.
+    components: {
+      MuiPopover: {
+        defaultProps: {
+          container: rootElement,
         },
-        // All `Portal`-related components need to have the the main app wrapper element as a container
-        // so that they are in the subtree under the element used in the `important` option of the Tailwind's config.
-        components: {
-          MuiPopover: {
-            defaultProps: {
-              container: rootElement,
-            },
-          },
-          MuiPopper: {
-            defaultProps: {
-              container: rootElement,
-            },
-          },
-          MuiDialog: {
-            defaultProps: {
-              container: rootElement,
-            },
-          },
-          MuiModal: {
-            defaultProps: {
-              container: rootElement,
-            },
-          },
+      },
+      MuiPopper: {
+        defaultProps: {
+          container: rootElement,
         },
-      }),
-    [rootElement, mode]
-  );
+      },
+      MuiDialog: {
+        defaultProps: {
+          container: rootElement,
+        },
+      },
+      MuiModal: {
+        defaultProps: {
+          container: rootElement,
+        },
+      },
+    },
+  });
 
   return (
     <StyledEngineProvider injectFirst>
-      <ThemeContext.Provider
+      <ThemeModeContext.Provider
         value={
           // eslint-disable-next-line react/jsx-no-constructed-context-values
-          { switchColorMode }
+          { themeMode, setThemeMode }
         }
       >
-        <ThemeProvider theme={theme}>{children}</ThemeProvider>
-      </ThemeContext.Provider>
+        <ThemeProvider theme={muiTheme}>{children}</ThemeProvider>
+      </ThemeModeContext.Provider>
     </StyledEngineProvider>
   );
+}
+
+// eslint-disable-next-line react-refresh/only-export-components
+export function useThemeModeContext() {
+  const context = useContext(ThemeModeContext);
+  if (!context) {
+    throw new Error('Theme context error.');
+  }
+  return context;
 }

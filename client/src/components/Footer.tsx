@@ -1,17 +1,15 @@
 import { Brightness4, Brightness7, QuestionMark } from '@mui/icons-material';
-import { AppBar, Box, Toolbar, Tooltip, useTheme } from '@mui/material';
+import { AppBar, Box, Toolbar, Tooltip } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
-import { useContext } from 'react';
 import { Link } from 'react-router-dom';
-import { ThemeContext } from '../context/ThemeContext';
+import { ThemeMode, useThemeModeContext } from '../context/ThemeContext';
 
 function scrollToTop() {
   window.scrollTo({ top: 0, behavior: 'smooth' }); // Scrolls to the top of the page smoothly
 }
 
 export default function Footer() {
-  const theme = useTheme();
-  const { switchColorMode } = useContext(ThemeContext);
+  const { themeMode, setThemeMode } = useThemeModeContext();
 
   return (
     <Box className="bottom-0 w-full flex-none">
@@ -42,12 +40,14 @@ export default function Footer() {
               </IconButton>
             </Tooltip>
             <Tooltip title="Toggle Theme" arrow disableInteractive>
-              <IconButton onClick={switchColorMode}>
-                {theme.palette.mode === 'dark' ? (
-                  <Brightness7 />
-                ) : (
-                  <Brightness4 />
-                )}
+              <IconButton
+                onClick={() => {
+                  setThemeMode((prev: ThemeMode) =>
+                    prev === 'light' ? 'dark' : 'light'
+                  );
+                }}
+              >
+                {themeMode === 'dark' ? <Brightness7 /> : <Brightness4 />}
               </IconButton>
             </Tooltip>
           </Box>

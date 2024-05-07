@@ -22,7 +22,8 @@ import {
 } from '@mui/material';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import ServerData, {
+import {
+  ServerData,
   ServerSetting,
   ServerSettingsInfo,
 } from '../data/ServerData';

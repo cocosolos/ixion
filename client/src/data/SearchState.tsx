@@ -1,11 +1,11 @@
-export default interface SearchState {
+export type SearchState = {
   name: string;
   multibox: string[] | null;
   trusts: string[] | null;
   levelSync: string[] | null;
   maxLevel: number[];
   expansions: string[] | null;
-}
+};
 
 export const SearchStateDefaults: SearchState = {
   name: '',

@@ -22,7 +22,7 @@ import { AlertResponse } from '../components/Alert';
 import ErrorCard from '../components/ErrorCard';
 import ExpansionBar from '../components/ExpansionsBar';
 import ServerSettingsDataGrid from '../components/ServerSettingsDataGrid';
-import ServerData from '../data/ServerData';
+import { ServerData } from '../data/ServerData';
 import CopyImageIcon from '../images/copy-image.png';
 
 export default function ServerDetails({

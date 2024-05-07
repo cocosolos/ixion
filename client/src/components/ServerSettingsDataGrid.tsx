@@ -6,14 +6,14 @@ import {
   ServerSettingsInfo,
 } from '../data/ServerData';
 
-interface KeyValueRow {
+type KeyValueRow = {
   id: number;
   key: string;
   rawValue: string | number | boolean;
   name: string;
   value: string | number | boolean;
   description: string;
-}
+};
 
 const columns: GridColDef[] = [
   { field: 'key', headerName: 'Key', align: 'right', flex: 4 },

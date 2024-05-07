@@ -1,8 +1,8 @@
 import { Box } from '@mui/material';
 import ErrorCard from '../components/ErrorCard';
 import ServerCard from '../components/ServerCard';
-import SearchState from '../data/SearchState';
-import ServerData from '../data/ServerData';
+import { SearchState } from '../data/SearchState';
+import { ServerData } from '../data/ServerData';
 
 export default function Home({
   servers,
