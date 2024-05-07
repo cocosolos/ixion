@@ -26,6 +26,7 @@ import {
   useState,
 } from 'react';
 import { Link } from 'react-router-dom';
+import { useThemeModeContext } from '../context/ThemeContext';
 import { ServerData } from '../data/ServerData';
 import CopyImageIcon from '../images/copy-image.png';
 import ExpansionBar from './Server/ExpansionsBar';
@@ -46,6 +47,7 @@ type ServerCardProps = {
 };
 
 export default function ServerCard({ server, children }: ServerCardProps) {
+  const { themeMode } = useThemeModeContext();
   const [clipboardTooltip, setClipboardTooltip] = useState('Copy server URL.');
   const [clipboardTooltipOpen, setClipboardTooltipOpen] = useState(false);
   const handleClipboardTooltipClose = () => {
@@ -110,7 +112,7 @@ export default function ServerCard({ server, children }: ServerCardProps) {
   };
 
   return (
-    <Card className="mb-2">
+    <Card className="mb-2" raised={themeMode === 'light'}>
       <Accordion
         className="my-0"
         defaultExpanded={isSettingsDataGridChild}

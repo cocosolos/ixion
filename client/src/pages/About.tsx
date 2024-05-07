@@ -6,16 +6,18 @@ import {
   Box,
   Card,
   CardContent,
-  Paper,
   Typography,
   alpha,
 } from '@mui/material';
 import { Link } from 'react-router-dom';
+import { useThemeModeContext } from '../context/ThemeContext';
 
 export default function About() {
+  const { themeMode } = useThemeModeContext();
+
   return (
     <>
-      <Card className="mb-3">
+      <Card className="mb-2" raised={themeMode === 'light'}>
         <CardContent>
           <Box className="mb-3">
             <Typography align="center" variant="h6">
@@ -148,7 +150,7 @@ export default function About() {
           </Box>
         </CardContent>
       </Card>
-      <Card>
+      <Card className="mb-2" raised={themeMode === 'light'}>
         <Accordion className="my-0">
           <AccordionSummary expandIcon={<ExpandMore />}>
             <Typography variant="h5">For server owners:</Typography>
@@ -203,8 +205,8 @@ export default function About() {
               >
                 Create a new file <b>settings/api.lua</b> in your server
                 directory.
-                <Paper elevation={2}>
-                  <pre className="m-0 p-2">
+                <Card className="bg-neutral-500/50">
+                  <pre className="m-0 select-text p-2">
                     <code>
                       {`xi = xi or {}
 xi.settings = xi.settings or {}
@@ -216,7 +218,7 @@ xi.settings.api =
 }`}
                     </code>
                   </pre>
-                </Paper>
+                </Card>
                 The world server needs to be restarted after any changes to any
                 of the settings. If you set <b>DO_NOT_TRACK</b> to <b>true</b>,
                 your server will be removed on the next hourly update.

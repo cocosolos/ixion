@@ -64,7 +64,7 @@ export default function SettingsChipCloud({ server }: SettingsChipCloudProps) {
             '&> .MuiChip-label': {
               paddingRight: 0.5,
             },
-            boxShadow: '0px 3px 3px rgba(0, 0, 0, .25)',
+            boxShadow: 1,
           }}
         />
       </Tooltip>
