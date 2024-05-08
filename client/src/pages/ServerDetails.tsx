@@ -3,8 +3,8 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { fetchDataFromBackend, fetchDemo } from '../apiUtil';
 import ErrorCard from '../components/ErrorCard';
+import ServerCard from '../components/Server/ServerCard';
 import SettingsDataGrid from '../components/Server/SettingsDataGrid';
-import ServerCard from '../components/ServerCard';
 import { useLoadingContext } from '../context/LoadingContext';
 import { ServerData } from '../data/ServerData';
 

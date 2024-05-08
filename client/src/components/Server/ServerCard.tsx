@@ -26,16 +26,16 @@ import {
   useState,
 } from 'react';
 import { Link } from 'react-router-dom';
-import { useThemeModeContext } from '../context/ThemeContext';
-import { ServerData } from '../data/ServerData';
-import CopyImageIcon from '../images/copy-image.png';
-import ExpansionBar from './Server/ExpansionsBar';
-import SettingsDataGrid from './Server/SettingsDataGrid';
+import { useThemeModeContext } from '../../context/ThemeContext';
+import { ServerData } from '../../data/ServerData';
+import CopyImageIcon from '../../images/copy-image.png';
 import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
-} from './Themed/Accordion';
+} from '../Themed/Accordion';
+import ExpansionBar from './ExpansionsBar';
+import SettingsDataGrid from './SettingsDataGrid';
 
 function scrollToTop() {
   window.scrollTo({ top: 0, behavior: 'smooth' });

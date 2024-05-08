@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import AlertComponent from './components/Alert';
 import Footer from './components/Footer';
-import Header from './components/Header';
+import Header from './components/Header/Header';
 import { SearchState, SearchStateDefaults } from './data/SearchState';
 import { ServerData } from './data/ServerData';
 import About from './pages/About';

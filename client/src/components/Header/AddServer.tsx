@@ -11,9 +11,9 @@ import {
 } from '@mui/material';
 import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { postData } from '../apiUtil';
-import { useLoadingContext } from '../context/LoadingContext';
-import { ServerData } from '../data/ServerData';
+import { postData } from '../../apiUtil';
+import { useLoadingContext } from '../../context/LoadingContext';
+import { ServerData } from '../../data/ServerData';
 
 const AddServerInput = styled('div')(({ theme }) => ({
   position: 'relative',

@@ -10,10 +10,11 @@ import {
 import IconButton from '@mui/material/IconButton';
 import { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { fetchDataFromBackend } from '../apiUtil';
-import { useLoadingContext } from '../context/LoadingContext';
-import { SearchState } from '../data/SearchState';
-import { ServerData } from '../data/ServerData';
+import { fetchDataFromBackend } from '../../apiUtil';
+import { useLoadingContext } from '../../context/LoadingContext';
+import { useThemeModeContext } from '../../context/ThemeContext';
+import { SearchState } from '../../data/SearchState';
+import { ServerData } from '../../data/ServerData';
 import AddServer from './AddServer';
 import SearchServers from './SearchServers';
 
@@ -30,6 +31,7 @@ export default function Header({
   searchState,
   setSearchState,
 }: HeaderProps) {
+  const { themeMode } = useThemeModeContext();
   const { progress, setProgress, showAlert } = useLoadingContext();
   const [showSearchServer, setShowSearchServer] = useState(false);
   const toggleShowSearchServer = () => {
@@ -67,7 +69,7 @@ export default function Header({
 
   return (
     <Box>
-      <AppBar position="static">
+      <AppBar position="static" elevation={themeMode === 'light' ? 8 : 3}>
         <Toolbar className="min-h-min py-1">
           <Typography
             component={Link}

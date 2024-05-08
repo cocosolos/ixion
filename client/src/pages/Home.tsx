@@ -1,7 +1,7 @@
 import { Box } from '@mui/material';
 import ErrorCard from '../components/ErrorCard';
+import ServerCard from '../components/Server/ServerCard';
 import SettingsChipCloud from '../components/Server/SettingsChipCloud';
-import ServerCard from '../components/ServerCard';
 import { SearchState } from '../data/SearchState';
 import { ServerData } from '../data/ServerData';
 
@@ -13,51 +13,131 @@ export default function Home({
   searchState: SearchState;
 }) {
   const filterServers = (server: ServerData): boolean => {
+    // Name
     if (searchState.name.length > 0) {
       const serverName = server.name.toLowerCase();
       if (!serverName.includes(searchState.name.toLowerCase())) {
         return false;
       }
     }
-
+    // Max Level
     if (server.max_level < searchState.maxLevel[0]) {
       return false;
     }
     if (server.max_level > searchState.maxLevel[1]) {
       return false;
     }
-
+    // Trusts
     if (
       searchState.trusts &&
       typeof server.settings_summary['MAIN.ENABLE_TRUST_CASTING'] === 'number'
     ) {
-      const serverTrusts =
+      const serverEnabled =
         server.settings_summary['MAIN.ENABLE_TRUST_CASTING'] === 1;
       const searchEnabled = searchState.trusts.includes('enabled');
       const searchDisabled = searchState.trusts.includes('disabled');
-      if (serverTrusts && searchDisabled && !searchEnabled) {
-        return false;
-      }
-      if (!serverTrusts && searchEnabled && !searchDisabled) {
+      if (
+        (serverEnabled && searchDisabled && !searchEnabled) ||
+        (!serverEnabled && searchEnabled && !searchDisabled)
+      ) {
         return false;
       }
     }
-
+    // Level Sync
     if (
       searchState.levelSync &&
       typeof server.settings_summary['MAP.LEVEL_SYNC_ENABLE'] === 'boolean'
     ) {
-      const serverLevelSync = server.settings_summary['MAP.LEVEL_SYNC_ENABLE'];
+      const serverEnabled = server.settings_summary['MAP.LEVEL_SYNC_ENABLE'];
       const searchEnabled = searchState.levelSync.includes('enabled');
       const searchDisabled = searchState.levelSync.includes('disabled');
-      if (serverLevelSync && searchDisabled && !searchEnabled) {
-        return false;
-      }
-      if (!serverLevelSync && searchEnabled && !searchDisabled) {
+      if (
+        (serverEnabled && searchDisabled && !searchEnabled) ||
+        (!serverEnabled && searchEnabled && !searchDisabled)
+      ) {
         return false;
       }
     }
-
+    // Home Point Teleport
+    if (
+      searchState.homePoint &&
+      typeof server.settings_summary['MAIN.HOMEPOINT_TELEPORT'] === 'number'
+    ) {
+      const serverEnabled =
+        server.settings_summary['MAIN.HOMEPOINT_TELEPORT'] === 1;
+      const searchEnabled = searchState.homePoint.includes('enabled');
+      const searchDisabled = searchState.homePoint.includes('disabled');
+      if (
+        (serverEnabled && searchDisabled && !searchEnabled) ||
+        (!serverEnabled && searchEnabled && !searchDisabled)
+      ) {
+        return false;
+      }
+    }
+    // Survival Guides
+    if (
+      searchState.survivalGuide &&
+      typeof server.settings_summary['MAIN.ENABLE_SURVIVAL_GUIDE'] === 'number'
+    ) {
+      const serverEnabled =
+        server.settings_summary['MAIN.ENABLE_SURVIVAL_GUIDE'] === 1;
+      const searchEnabled = searchState.survivalGuide.includes('enabled');
+      const searchDisabled = searchState.survivalGuide.includes('disabled');
+      if (
+        (serverEnabled && searchDisabled && !searchEnabled) ||
+        (!serverEnabled && searchEnabled && !searchDisabled)
+      ) {
+        return false;
+      }
+    }
+    // Records of Eminence
+    if (
+      searchState.recordsOfEminence &&
+      typeof server.settings_summary['MAIN.ENABLE_ROE'] === 'number'
+    ) {
+      const serverEnabled = server.settings_summary['MAIN.ENABLE_ROE'] === 1;
+      const searchEnabled = searchState.recordsOfEminence.includes('enabled');
+      const searchDisabled = searchState.recordsOfEminence.includes('disabled');
+      if (
+        (serverEnabled && searchDisabled && !searchEnabled) ||
+        (!serverEnabled && searchEnabled && !searchDisabled)
+      ) {
+        return false;
+      }
+    }
+    // Fields of Valor
+    if (
+      searchState.fieldsOfValor &&
+      typeof server.settings_summary['MAIN.ENABLE_FIELD_MANUALS'] === 'number'
+    ) {
+      const serverEnabled =
+        server.settings_summary['MAIN.ENABLE_FIELD_MANUALS'] === 1;
+      const searchEnabled = searchState.fieldsOfValor.includes('enabled');
+      const searchDisabled = searchState.fieldsOfValor.includes('disabled');
+      if (
+        (serverEnabled && searchDisabled && !searchEnabled) ||
+        (!serverEnabled && searchEnabled && !searchDisabled)
+      ) {
+        return false;
+      }
+    }
+    // Grounds of Valor
+    if (
+      searchState.groundsOfValor &&
+      typeof server.settings_summary['MAIN.ENABLE_GROUNDS_TOMES'] === 'number'
+    ) {
+      const serverEnabled =
+        server.settings_summary['MAIN.ENABLE_GROUNDS_TOMES'] === 1;
+      const searchEnabled = searchState.groundsOfValor.includes('enabled');
+      const searchDisabled = searchState.groundsOfValor.includes('disabled');
+      if (
+        (serverEnabled && searchDisabled && !searchEnabled) ||
+        (!serverEnabled && searchEnabled && !searchDisabled)
+      ) {
+        return false;
+      }
+    }
+    // Expansions
     if (searchState.expansions) {
       if (!server.expansions) {
         return false;
@@ -72,23 +152,23 @@ export default function Home({
       ) {
         return false;
       }
-      if (searchState.expansions.includes('rotz') && server.expansions.rotz) {
+      if (searchState.expansions.includes('rotz') !== server.expansions.rotz) {
         return false;
       }
-      if (searchState.expansions.includes('cop') && server.expansions.cop) {
+      if (searchState.expansions.includes('cop') !== server.expansions.cop) {
         return false;
       }
-      if (searchState.expansions.includes('toau') && server.expansions.toau) {
+      if (searchState.expansions.includes('toau') !== server.expansions.toau) {
         return false;
       }
-      if (searchState.expansions.includes('wotg') && server.expansions.wotg) {
+      if (searchState.expansions.includes('wotg') !== server.expansions.wotg) {
         return false;
       }
-      if (searchState.expansions.includes('soa') && server.expansions.soa) {
+      if (searchState.expansions.includes('soa') !== server.expansions.soa) {
         return false;
       }
     }
-
+    // Multibox
     if (searchState.multibox) {
       const serverMultibox = server.login_limit;
       if (searchState.multibox.includes('none') && serverMultibox !== 1) {
