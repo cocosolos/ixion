@@ -75,6 +75,16 @@ export function ThemeContextProvider({
           container: rootElement,
         },
       },
+      MuiLink: {
+        styleOverrides: {
+          root: {
+            textDecoration: 'none',
+            ':hover': {
+              textDecoration: 'underline',
+            },
+          },
+        },
+      },
     },
   });
 

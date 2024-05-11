@@ -9,6 +9,9 @@ import {
   Warning,
 } from '@mui/icons-material';
 import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
   Box,
   Card,
   CardContent,
@@ -29,11 +32,6 @@ import { Link } from 'react-router-dom';
 import { useThemeModeContext } from '../../context/ThemeContext';
 import { ServerData } from '../../data/ServerData';
 import CopyImageIcon from '../../images/copy-image.png';
-import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
-} from '../Themed/Accordion';
 import ExpansionBar from './ExpansionsBar';
 import SettingsDataGrid from './SettingsDataGrid';
 
@@ -115,12 +113,26 @@ export default function ServerCard({ server, children }: ServerCardProps) {
     <Card className="mb-2" raised={themeMode === 'light'}>
       <Accordion
         className="my-0"
+        disableGutters
+        elevation={0}
+        square
         defaultExpanded={isSettingsDataGridChild}
         expanded={expand}
       >
         <AccordionSummary
           expandIcon={!isSettingsDataGridChild && <ExpandMore />}
           onClick={toggleAcordion}
+          sx={{
+            backgroundColor: (theme) =>
+              theme.palette.mode === 'dark'
+                ? 'rgba(255, 255, 255, .05)'
+                : 'rgba(0, 0, 0, .02)',
+            '& .MuiAccordionSummary-content': {
+              margin: (theme) => theme.spacing(0),
+            },
+            boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
+            minHeight: '32px',
+          }}
         >
           <Box className="flex flex-col items-center justify-center">
             <Box className="flex content-center">
@@ -258,7 +270,15 @@ export default function ServerCard({ server, children }: ServerCardProps) {
             </Typography>
           </Box>
         </AccordionSummary>
-        <AccordionDetails className="p-2">
+        <AccordionDetails
+          className="p-2"
+          sx={{
+            backgroundColor: (theme) =>
+              theme.palette.mode === 'dark'
+                ? 'rgba(255, 255, 255, .03)'
+                : 'rgba(0, 0, 0, .04)',
+          }}
+        >
           {server.settings_summary['MAIN.SERVER_MESSAGE'] && (
             <>
               <Box className="flex justify-center">

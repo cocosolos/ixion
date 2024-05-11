@@ -8,6 +8,11 @@
   user-select: none;
 }
 
+#title {
+  color: white;
+  text-decoration: none;
+}
+
 code {
   user-select: text;
 }

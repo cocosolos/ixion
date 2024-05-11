@@ -75,9 +75,8 @@ export default function Header({
             component={Link}
             to="/"
             variant="h6"
+            id="title"
             sx={{
-              color: 'inherit',
-              textDecoration: 'none',
               flexGrow: 1,
             }}
           >
