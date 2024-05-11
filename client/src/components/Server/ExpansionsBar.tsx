@@ -1,7 +1,8 @@
-import { ToggleButton, ToggleButtonGroup } from '@mui/material';
+import { AddCircleOutline } from '@mui/icons-material';
+import { Box, ToggleButton, ToggleButtonGroup, Tooltip } from '@mui/material';
 import { ServerData } from '../../data/ServerData';
 
-const expansions = [
+const expansionButtons = [
   <ToggleButton
     key="rotz"
     value="rotz"
@@ -52,21 +53,54 @@ const expansions = [
 type ExpansionBarProps = { server: ServerData };
 
 export default function ExpansionBar({ server }: ExpansionBarProps) {
+  const { expansions } = server;
+
+  const addons = ['acp', 'amk', 'asa', 'abyssea', 'voidwatch', 'rov', 'tvr'];
+
+  let enabledAddons = addons.filter((prop) => expansions[prop]);
+
+  enabledAddons = enabledAddons.map((prop) => {
+    if (prop === 'abyssea' || prop === 'voidwatch') {
+      return prop.charAt(0).toUpperCase() + prop.slice(1);
+    }
+    return prop.toUpperCase();
+  });
+
   return (
-    <ToggleButtonGroup
-      size="small"
-      value={
-        server.expansions && [
-          server.expansions.rotz && 'rotz',
-          server.expansions.cop && 'cop',
-          server.expansions.toau && 'toau',
-          server.expansions.wotg && 'wotg',
-          server.expansions.soa && 'soa',
-        ]
-      }
-      sx={{ '& button': { lineHeight: 1.0 } }}
-    >
-      {expansions}
-    </ToggleButtonGroup>
+    <Box className="flex items-center">
+      <ToggleButtonGroup
+        size="small"
+        value={
+          expansions && [
+            expansions.rotz && 'rotz',
+            expansions.cop && 'cop',
+            expansions.toau && 'toau',
+            expansions.wotg && 'wotg',
+            expansions.soa && 'soa',
+          ]
+        }
+        sx={{ '& button': { maxHeight: '1rem' } }}
+      >
+        {expansionButtons}
+      </ToggleButtonGroup>
+      {enabledAddons.length !== 0 && (
+        <Tooltip
+          title={
+            <div style={{ whiteSpace: 'pre-line' }}>
+              {enabledAddons.join('\n')}
+            </div>
+          }
+          placement="right"
+          disableInteractive
+          arrow
+        >
+          <AddCircleOutline
+            style={{
+              maxHeight: '1rem',
+            }}
+          />
+        </Tooltip>
+      )}
+    </Box>
   );
 }

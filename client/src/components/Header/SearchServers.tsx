@@ -1,4 +1,4 @@
-import { RestartAlt } from '@mui/icons-material';
+import { RestartAlt, Sort } from '@mui/icons-material';
 import {
   Box,
   Container,
@@ -497,52 +497,10 @@ export default function SearchServers({
             </ToggleButton>
           </ToggleButtonGroup>
         </Grid>
-        {/* Records of Eminence */}
-        <Grid
-          item
-          xs={4}
-          display="flex"
-          flexDirection="column"
-          alignItems="center"
-        >
-          <Typography id="roe-button-group" variant="caption">
-            Records of Eminence
-          </Typography>
-          <ToggleButtonGroup
-            value={searchState.recordsOfEminence}
-            onChange={(_event, value) => {
-              handleChange('recordsOfEminence', value);
-            }}
-            size="small"
-            aria-labelledby="records-of-eminence-button-group"
-            exclusive
-            sx={{
-              display: 'flex',
-              width: '100%',
-            }}
-          >
-            <ToggleButton
-              value="disabled"
-              aria-label="records-of-eminence-disabled"
-              className="py-0"
-              sx={{ width: '50%' }}
-            >
-              Disabled
-            </ToggleButton>
-            <ToggleButton
-              value="enabled"
-              aria-label="records-of-eminence-enabled"
-              className="py-0"
-              sx={{ width: '50%' }}
-            >
-              Enabled
-            </ToggleButton>
-          </ToggleButtonGroup>
-        </Grid>
         {/* Fields of Valor */}
         <Grid
           item
-          xs={4}
+          xs={6}
           display="flex"
           flexDirection="column"
           alignItems="center"
@@ -584,7 +542,7 @@ export default function SearchServers({
         {/* Grounds of Valor */}
         <Grid
           item
-          xs={4}
+          xs={6}
           display="flex"
           flexDirection="column"
           alignItems="center"
@@ -623,17 +581,76 @@ export default function SearchServers({
             </ToggleButton>
           </ToggleButtonGroup>
         </Grid>
-        <Box className="flex min-w-full justify-end pt-2">
-          <Tooltip title="Reset filters." arrow disableInteractive>
-            <IconButton
-              onClick={() => {
-                setSearchState(SearchStateDefaults);
-              }}
+        {/* Records of Eminence */}
+        <Grid
+          item
+          xs={6}
+          display="flex"
+          flexDirection="column"
+          alignItems="center"
+        >
+          <Typography id="roe-button-group" variant="caption">
+            Records of Eminence
+          </Typography>
+          <ToggleButtonGroup
+            value={searchState.recordsOfEminence}
+            onChange={(_event, value) => {
+              handleChange('recordsOfEminence', value);
+            }}
+            size="small"
+            aria-labelledby="records-of-eminence-button-group"
+            exclusive
+            sx={{
+              display: 'flex',
+              width: '100%',
+            }}
+          >
+            <ToggleButton
+              value="disabled"
+              aria-label="records-of-eminence-disabled"
+              className="py-0"
+              sx={{ width: '50%' }}
             >
-              <RestartAlt />
-            </IconButton>
-          </Tooltip>
-        </Box>
+              Disabled
+            </ToggleButton>
+            <ToggleButton
+              value="enabled"
+              aria-label="records-of-eminence-enabled"
+              className="py-0"
+              sx={{ width: '50%' }}
+            >
+              Enabled
+            </ToggleButton>
+          </ToggleButtonGroup>
+        </Grid>
+        <Grid
+          item
+          xs={6}
+          display="flex"
+          flexDirection="column"
+          alignItems="center"
+        >
+          <Box className="flex min-w-full justify-end pt-2">
+            <Tooltip title="Sort" arrow disableInteractive>
+              <IconButton
+              // onClick={() => {
+              //   setSearchState(SearchStateDefaults);
+              // }}
+              >
+                <Sort />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Reset filters." arrow disableInteractive>
+              <IconButton
+                onClick={() => {
+                  setSearchState(SearchStateDefaults);
+                }}
+              >
+                <RestartAlt />
+              </IconButton>
+            </Tooltip>
+          </Box>
+        </Grid>
       </Grid>
     </Container>
   );

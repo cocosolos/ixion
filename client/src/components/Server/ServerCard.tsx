@@ -186,7 +186,7 @@ export default function ServerCard({ server, children }: ServerCardProps) {
               </Tooltip>
             </Box>
           </Box>
-          <CardContent className="grow py-1">
+          <Box className="grow py-1 pl-4">
             <Box className="flex content-center">
               <Typography
                 variant="h5"
@@ -260,7 +260,7 @@ export default function ServerCard({ server, children }: ServerCardProps) {
               )}
             </Box>
             <ExpansionBar server={server} />
-          </CardContent>
+          </Box>
           <Box className="flex items-center justify-center">
             <Typography
               variant="h5"
@@ -281,21 +281,36 @@ export default function ServerCard({ server, children }: ServerCardProps) {
         >
           {server.settings_summary['MAIN.SERVER_MESSAGE'] && (
             <>
+              <Divider>
+                <Typography
+                  variant="caption"
+                  color={(theme) => alpha(theme.palette.divider, 0.6)}
+                >
+                  Server Message
+                </Typography>
+              </Divider>
               <Box className="flex justify-center">
                 <Typography variant="body2">
                   {server.settings_summary['MAIN.SERVER_MESSAGE']}
                 </Typography>
               </Box>
-              <Divider sx={{ marginY: 1 }} />
             </>
           )}
+          <Divider>
+            <Typography
+              variant="caption"
+              color={(theme) => alpha(theme.palette.divider, 0.6)}
+            >
+              Settings{!isSettingsDataGridChild && ' Summary'}
+            </Typography>
+          </Divider>
           {children}
         </AccordionDetails>
       </Accordion>
       <Divider />
-      <CardContent className="flex flex-wrap justify-between py-0">
+      <CardContent className="flex flex-wrap justify-between py-0 pr-0">
         <Box className="flex items-center whitespace-nowrap">
-          <Typography variant="caption">
+          <Typography variant="caption" sx={{ lineHeight: 1 }}>
             {server.active_sessions} active sessions
           </Typography>
           {server.login_limit !== 1 && (
@@ -307,9 +322,10 @@ export default function ServerCard({ server, children }: ServerCardProps) {
               <img
                 src={CopyImageIcon}
                 alt=""
+                className="my-1"
                 style={{
-                  maxHeight: '1em',
-                  marginLeft: '0.5em',
+                  maxHeight: '1rem',
+                  marginLeft: '0.5rem',
                 }}
                 onContextMenu={(event) => event.preventDefault()}
               />
@@ -318,6 +334,9 @@ export default function ServerCard({ server, children }: ServerCardProps) {
         </Box>
         <Box className="flex items-center whitespace-nowrap">
           {/* <ServerDetailsModal id={server.id} /> */}
+          <Typography variant="caption" sx={{ lineHeight: 1 }}>
+            Updated: {new Date(server.updated).toLocaleString()}
+          </Typography>
           <Tooltip
             title={
               isSettingsDataGridChild ? 'Scroll to top.' : 'View full settings.'
@@ -333,15 +352,20 @@ export default function ServerCard({ server, children }: ServerCardProps) {
               disableRipple
             >
               {isSettingsDataGridChild ? (
-                <ArrowCircleUp className="p-1" />
+                <ArrowCircleUp
+                  style={{
+                    maxHeight: '1rem',
+                  }}
+                />
               ) : (
-                <Info className="p-1" />
+                <Info
+                  style={{
+                    maxHeight: '1rem',
+                  }}
+                />
               )}
             </IconButton>
           </Tooltip>
-          <Typography variant="caption">
-            Updated: {new Date(server.updated).toLocaleString()}
-          </Typography>
         </Box>
       </CardContent>
     </Card>

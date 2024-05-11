@@ -16,15 +16,15 @@ required_settings = [
     "LOGIN.LOGIN_LIMIT",
 ]
 
-recommended_settings = [
+summary_settings = [
     "LOGIN.CLIENT_VER",
     "MAIN.ENABLE_TRUST_CASTING",
+    "MAP.LEVEL_SYNC_ENABLE",
     "MAIN.HOMEPOINT_TELEPORT",
     "MAIN.ENABLE_SURVIVAL_GUIDE",
-    "MAP.LEVEL_SYNC_ENABLE",
-    "MAIN.ENABLE_ROE",
     "MAIN.ENABLE_FIELD_MANUALS",
     "MAIN.ENABLE_GROUNDS_TOMES",
+    "MAIN.ENABLE_ROE",
 ]
 
 expansions_settings = {
@@ -146,14 +146,14 @@ class Server(models.Model):
                 )
 
             settings_summary = {}
-            for setting in recommended_settings:
+            for setting in summary_settings:
                 if server_settings[setting]:
                     settings_summary[setting] = server_settings[setting]
             # Check customizations
             for key, value in server_settings.items():
                 if (
                     key not in required_settings
-                    and key not in recommended_settings
+                    and key not in summary_settings
                     and key not in expansions_settings
                     and (key not in default_settings or default_settings[key] != value)
                 ):
