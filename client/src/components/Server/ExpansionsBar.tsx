@@ -1,10 +1,11 @@
-import { AddCircle } from '@mui/icons-material';
+import { AddCircleTwoTone } from '@mui/icons-material';
 import {
   Box,
   IconButton,
   ToggleButton,
   ToggleButtonGroup,
   Tooltip,
+  useTheme,
 } from '@mui/material';
 import { ServerData } from '../../data/ServerData';
 
@@ -60,6 +61,7 @@ type ExpansionBarProps = { server: ServerData };
 
 export default function ExpansionBar({ server }: ExpansionBarProps) {
   const { expansions } = server;
+  const theme = useTheme();
 
   const addons = ['acp', 'amk', 'asa', 'abyssea', 'voidwatch', 'rov', 'tvr'];
 
@@ -101,9 +103,10 @@ export default function ExpansionBar({ server }: ExpansionBarProps) {
           arrow
         >
           <IconButton className="p-0" disableRipple>
-            <AddCircle
+            <AddCircleTwoTone
               style={{
                 maxHeight: '1rem',
+                color: theme.palette.text.primary,
               }}
             />
           </IconButton>

@@ -16,8 +16,8 @@ export default defineConfig({
     strictPort: true,
     port: 3000,
     hmr: {
-      //port: 3010,
-      host: 'localhost'
+      // port: 3010,
+      host: 'localhost',
     },
   },
   test: {

@@ -318,6 +318,7 @@ export default function ServerCard({ server, children }: ServerCardProps) {
               title={`Server allows ${server.login_limit === 0 ? 'unlimited' : server.login_limit} simultaneous game sessions per IP.`}
               arrow
               disableInteractive
+              placement="top"
             >
               <img
                 src={CopyImageIcon}
@@ -343,6 +344,7 @@ export default function ServerCard({ server, children }: ServerCardProps) {
             }
             arrow
             disableInteractive
+            placement="top"
           >
             <IconButton
               component={Link}

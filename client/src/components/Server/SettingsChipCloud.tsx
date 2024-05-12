@@ -40,6 +40,7 @@ export default function SettingsChipCloud({ server }: SettingsChipCloudProps) {
         arrow
         disableInteractive
         title={ServerSettingsInfo[key].description}
+        placement="top"
       >
         <Chip
           label={`${ServerSettingsInfo[key].name === '' ? key : ServerSettingsInfo[key].name}`}

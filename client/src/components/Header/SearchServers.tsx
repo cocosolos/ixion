@@ -631,7 +631,7 @@ export default function SearchServers({
           alignItems="center"
         >
           <Box className="flex min-w-full justify-end pt-2">
-            <Tooltip title="Sort" arrow disableInteractive>
+            <Tooltip title="Sort" arrow disableInteractive placement="top">
               <IconButton
               // onClick={() => {
               //   setSearchState(SearchStateDefaults);
@@ -640,7 +640,12 @@ export default function SearchServers({
                 <Sort />
               </IconButton>
             </Tooltip>
-            <Tooltip title="Reset filters." arrow disableInteractive>
+            <Tooltip
+              title="Reset filters."
+              arrow
+              disableInteractive
+              placement="top"
+            >
               <IconButton
                 onClick={() => {
                   setSearchState(SearchStateDefaults);

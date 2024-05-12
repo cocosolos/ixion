@@ -10,10 +10,36 @@ import {
   alpha,
 } from '@mui/material';
 import Link from '@mui/material/Link';
+import CodeCard from '../components/CodeCard';
 import { useThemeModeContext } from '../context/ThemeContext';
+import apiLua from '../data/api.lua?raw';
 
 export default function About() {
   const { themeMode } = useThemeModeContext();
+
+  const recommendedSettings = `MAIN.SERVER_NAME
+MAIN.MAX_LEVEL
+LOGIN.LOGIN_LIMIT
+LOGIN.CLIENT_VER
+MAIN.ENABLE_TRUST_CASTING
+MAP.LEVEL_SYNC_ENABLE
+MAIN.HOMEPOINT_TELEPORT
+MAIN.ENABLE_SURVIVAL_GUIDE
+MAIN.ENABLE_FIELD_MANUALS
+MAIN.ENABLE_GROUNDS_TOMES
+MAIN.ENABLE_ROE
+LOGIN.RISE_OF_ZILART
+LOGIN.CHAINS_OF_PROMATHIA
+LOGIN.TREASURES_OF_AHT_URGHAN
+LOGIN.WINGS_OF_THE_GODDESS
+LOGIN.SEEKERS_OF_ADOULIN
+MAIN.ENABLE_ACP
+MAIN.ENABLE_AMK
+MAIN.ENABLE_ASA
+MAIN.ENABLE_ABYSSEA
+MAIN.ENABLE_VOIDWATCH
+MAIN.ENABLE_ROV
+MAIN.ENABLE_TVR`;
 
   return (
     <>
@@ -147,23 +173,26 @@ export default function About() {
               >
                 Create a new file <b>settings/api.lua</b> in your server
                 directory.
-                <Card className="bg-neutral-500/50">
-                  <pre className="m-0 select-text p-2">
-                    <code>
-                      {`xi = xi or {}
-xi.settings = xi.settings or {}
-
-xi.settings.api =
-{
-    WEBSITE = '',
-    DO_NOT_TRACK = false,
-}`}
-                    </code>
-                  </pre>
-                </Card>
+                <CodeCard title="api.lua" content={apiLua} />
                 The world server needs to be restarted after any changes to any
                 of the settings. If you set <b>DO_NOT_TRACK</b> to <b>true</b>,
                 your server will be removed on the next update.
+              </Typography>
+            </Box>
+            <Box className="mb-3">
+              <Typography align="center" variant="h6">
+                Which settings are used?
+              </Typography>
+              <Typography
+                component="span"
+                variant="body1"
+                color={(theme) => alpha(theme.palette.text.primary, 0.87)}
+              >
+                Anything that differs from the default LSB settings will be
+                displayed in the &quot;Settings Summary&quot; section for a
+                server. The following settings are always included as part of
+                the UI:
+                <CodeCard title="Settings" content={recommendedSettings} />
               </Typography>
             </Box>
           </AccordionDetails>
