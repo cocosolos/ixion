@@ -1,7 +1,6 @@
 import { Box, Container } from '@mui/material';
 import { useState } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import AlertComponent from './components/Alert';
 import Footer from './components/Footer';
 import Header from './components/Header/Header';
 import { SearchState, SearchStateDefaults } from './data/SearchState';
@@ -25,7 +24,6 @@ export function App() {
         searchState={searchState}
         setSearchState={setSearchState}
       />
-      <AlertComponent />
       <Container className="grow p-0">
         <Box className="m-2">
           <Routes>

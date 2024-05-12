@@ -15,6 +15,7 @@ import { useLoadingContext } from '../../context/LoadingContext';
 import { useThemeModeContext } from '../../context/ThemeContext';
 import { SearchState } from '../../data/SearchState';
 import { ServerData } from '../../data/ServerData';
+import AlertComponent from '../Alert';
 import AddServer from './AddServer';
 import SearchServers from './SearchServers';
 
@@ -69,7 +70,10 @@ export default function Header({
 
   return (
     <Box>
-      <AppBar position="static" elevation={themeMode === 'light' ? 8 : 3}>
+      <AppBar
+        position="static"
+        sx={{ boxShadow: themeMode === 'light' ? 8 : 3 }}
+      >
         <Toolbar className="min-h-min py-1">
           <Typography
             component={Link}
@@ -103,6 +107,7 @@ export default function Header({
           height: progress === 0 ? 0 : '1px',
         }}
       />
+      <AlertComponent />
       <SearchServers
         showSearchServer={showSearchServer}
         searchState={searchState}
