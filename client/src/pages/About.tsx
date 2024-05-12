@@ -146,24 +146,6 @@ MAIN.ENABLE_TVR`;
             </Box>
             <Box className="mb-3">
               <Typography align="center" variant="h6">
-                What if my server isn&apos;t running LSB?
-              </Typography>
-              <Typography
-                component="p"
-                variant="body1"
-                color={(theme) => alpha(theme.palette.text.primary, 0.87)}
-              >
-                If you&apos;re not on LSB, you could fake the API response.
-                Right now the only required settings are <b>MAIN.SERVER_NAME</b>
-                , <b>MAIN.MAX_LEVEL</b>, and <b>LOGIN.LOGIN_LIMIT</b>.
-                You&apos;ll want to look at the LSB settings and serve whatever
-                relevant changes you&apos;ve made using the LSB equivalent.
-                Settings should be served at <b>/api/settings</b> and total
-                active sessions should be served at <b>/api/sessions</b>.
-              </Typography>
-            </Box>
-            <Box className="mb-3">
-              <Typography align="center" variant="h6">
                 How can I add a link to the server website?
               </Typography>
               <Typography
@@ -193,6 +175,23 @@ MAIN.ENABLE_TVR`;
                 server. The following settings are always included as part of
                 the UI:
                 <CodeCard title="Settings" content={recommendedSettings} />
+              </Typography>
+            </Box>
+            <Box className="mb-3">
+              <Typography align="center" variant="h6">
+                What if my server isn&apos;t running LSB?
+              </Typography>
+              <Typography
+                component="p"
+                variant="body1"
+                color={(theme) => alpha(theme.palette.text.primary, 0.87)}
+              >
+                If you&apos;re not running LSB, you could fake the API response.
+                You&apos;ll want to look at the LSB settings and serve whatever
+                relevant changes you&apos;ve made using the LSB equivalent, the
+                above listed settings at minimum. Settings should be served at{' '}
+                <b>/api/settings</b> and total active sessions should be served
+                at <b>/api/sessions</b>.
               </Typography>
             </Box>
           </AccordionDetails>

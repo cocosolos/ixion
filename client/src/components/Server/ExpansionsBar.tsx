@@ -1,12 +1,4 @@
-import { AddCircleTwoTone } from '@mui/icons-material';
-import {
-  Box,
-  IconButton,
-  ToggleButton,
-  ToggleButtonGroup,
-  Tooltip,
-  useTheme,
-} from '@mui/material';
+import { Box, ToggleButton, ToggleButtonGroup, Tooltip } from '@mui/material';
 import { ServerData } from '../../data/ServerData';
 
 const expansionButtons = [
@@ -61,12 +53,9 @@ type ExpansionBarProps = { server: ServerData };
 
 export default function ExpansionBar({ server }: ExpansionBarProps) {
   const { expansions } = server;
-  const theme = useTheme();
 
   const addons = ['acp', 'amk', 'asa', 'abyssea', 'voidwatch', 'rov', 'tvr'];
-
   let enabledAddons = addons.filter((prop) => expansions[prop]);
-
   enabledAddons = enabledAddons.map((prop) => {
     if (prop === 'abyssea' || prop === 'voidwatch') {
       return prop.charAt(0).toUpperCase() + prop.slice(1);
@@ -76,42 +65,46 @@ export default function ExpansionBar({ server }: ExpansionBarProps) {
 
   return (
     <Box className="my-1 flex items-center">
-      <ToggleButtonGroup
-        size="small"
-        value={
-          expansions && [
-            expansions.rotz && 'rotz',
-            expansions.cop && 'cop',
-            expansions.toau && 'toau',
-            expansions.wotg && 'wotg',
-            expansions.soa && 'soa',
-          ]
-        }
-        sx={{ '& button': { maxHeight: '1rem' } }}
-      >
-        {expansionButtons}
-      </ToggleButtonGroup>
-      {enabledAddons.length !== 0 && (
-        <Tooltip
-          title={
+      <Tooltip
+        title={
+          enabledAddons.length !== 0 && (
             <div style={{ whiteSpace: 'pre-line' }}>
               {enabledAddons.join('\n')}
             </div>
+          )
+        }
+        placement="right"
+        disableInteractive
+        arrow
+      >
+        <ToggleButtonGroup
+          size="small"
+          value={
+            expansions && [
+              expansions.rotz && 'rotz',
+              expansions.cop && 'cop',
+              expansions.toau && 'toau',
+              expansions.wotg && 'wotg',
+              expansions.soa && 'soa',
+              enabledAddons.length !== 0 && 'addons',
+            ]
           }
-          placement="right"
-          disableInteractive
-          arrow
+          sx={{ '& button': { maxHeight: '1rem' } }}
         >
-          <IconButton className="p-0" disableRipple>
-            <AddCircleTwoTone
-              style={{
-                maxHeight: '1rem',
-                color: theme.palette.text.primary,
-              }}
-            />
-          </IconButton>
-        </Tooltip>
-      )}
+          {expansionButtons}
+          {enabledAddons.length !== 0 && (
+            <ToggleButton
+              key="addons"
+              value="addons"
+              aria-label="addons-enabled"
+              className="py-0"
+              disabled
+            >
+              +
+            </ToggleButton>
+          )}
+        </ToggleButtonGroup>
+      </Tooltip>
     </Box>
   );
 }
