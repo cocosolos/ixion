@@ -1,5 +1,11 @@
-import { AddCircleOutline } from '@mui/icons-material';
-import { Box, ToggleButton, ToggleButtonGroup, Tooltip } from '@mui/material';
+import { AddCircle } from '@mui/icons-material';
+import {
+  Box,
+  IconButton,
+  ToggleButton,
+  ToggleButtonGroup,
+  Tooltip,
+} from '@mui/material';
 import { ServerData } from '../../data/ServerData';
 
 const expansionButtons = [
@@ -67,7 +73,7 @@ export default function ExpansionBar({ server }: ExpansionBarProps) {
   });
 
   return (
-    <Box className="flex items-center">
+    <Box className="my-1 flex items-center">
       <ToggleButtonGroup
         size="small"
         value={
@@ -94,11 +100,13 @@ export default function ExpansionBar({ server }: ExpansionBarProps) {
           disableInteractive
           arrow
         >
-          <AddCircleOutline
-            style={{
-              maxHeight: '1rem',
-            }}
-          />
+          <IconButton className="p-0" disableRipple>
+            <AddCircle
+              style={{
+                maxHeight: '1rem',
+              }}
+            />
+          </IconButton>
         </Tooltip>
       )}
     </Box>

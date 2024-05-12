@@ -134,7 +134,6 @@ export default function About() {
                 relevant changes you&apos;ve made using the LSB equivalent.
                 Settings should be served at <b>/api/settings</b> and total
                 active sessions should be served at <b>/api/sessions</b>.
-                Enabled expansions are controlled by the LOGIN settings.
               </Typography>
             </Box>
             <Box className="mb-3">
@@ -164,7 +163,7 @@ xi.settings.api =
                 </Card>
                 The world server needs to be restarted after any changes to any
                 of the settings. If you set <b>DO_NOT_TRACK</b> to <b>true</b>,
-                your server will be removed on the next hourly update.
+                your server will be removed on the next update.
               </Typography>
             </Box>
           </AccordionDetails>
@@ -195,7 +194,7 @@ xi.settings.api =
                   XiPrivateServers GitHub
                 </Link>{' '}
                 and see if it&apos;s listed there. Server owners see above for
-                information on how to add a Link href your website.
+                information on how to add a link to your website.
               </Typography>
               <Typography
                 component="li"

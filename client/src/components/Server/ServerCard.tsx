@@ -128,7 +128,7 @@ export default function ServerCard({ server, children }: ServerCardProps) {
                 ? 'rgba(255, 255, 255, .05)'
                 : 'rgba(0, 0, 0, .02)',
             '& .MuiAccordionSummary-content': {
-              margin: (theme) => theme.spacing(0),
+              margin: 0,
             },
             boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
             minHeight: '32px',
@@ -271,7 +271,7 @@ export default function ServerCard({ server, children }: ServerCardProps) {
           </Box>
         </AccordionSummary>
         <AccordionDetails
-          className="p-2"
+          className="p-2 pt-0"
           sx={{
             backgroundColor: (theme) =>
               theme.palette.mode === 'dark'
