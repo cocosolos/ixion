@@ -1,6 +1,7 @@
 import { Refresh, Search } from '@mui/icons-material';
 import {
   AppBar,
+  Badge,
   Box,
   LinearProgress,
   Toolbar,
@@ -9,11 +10,11 @@ import {
 } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import { useCallback, useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { fetchDataFromBackend } from '../../apiUtil';
 import { useLoadingContext } from '../../context/LoadingContext';
 import { useThemeModeContext } from '../../context/ThemeContext';
-import { SearchState } from '../../data/SearchState';
+import { SearchState, SearchStateDefaults } from '../../data/SearchState';
 import { ServerData } from '../../data/ServerData';
 import AlertComponent from '../Alert';
 import AddServer from './AddServer';
@@ -32,9 +33,12 @@ export default function Header({
   searchState,
   setSearchState,
 }: HeaderProps) {
+  const location = useLocation();
   const { themeMode } = useThemeModeContext();
   const { progress, setProgress, showAlert } = useLoadingContext();
   const [showSearchServer, setShowSearchServer] = useState(false);
+  const [filtersApplied, setFiltersApplied] = useState(false);
+  const [initialFetch, setInitialFetch] = useState(false);
   const toggleShowSearchServer = () => {
     setShowSearchServer((prev) => !prev);
   };
@@ -65,8 +69,14 @@ export default function Header({
   }, [showAlert, setServers, setProgress]);
 
   useEffect(() => {
-    fetchServerData();
-  }, [fetchServerData]);
+    if (!initialFetch) {
+      fetchServerData();
+      setInitialFetch(true);
+    }
+    setFiltersApplied(
+      JSON.stringify(searchState) !== JSON.stringify(SearchStateDefaults)
+    );
+  }, [initialFetch, fetchServerData, searchState]);
 
   return (
     <Box>
@@ -83,6 +93,11 @@ export default function Header({
             sx={{
               flexGrow: 1,
             }}
+            onClick={(event) => {
+              if (location.pathname === '/') {
+                event.preventDefault();
+              }
+            }}
           >
             IXION
           </Typography>
@@ -94,7 +109,9 @@ export default function Header({
           </Tooltip>
           <Tooltip arrow disableInteractive title="Filter servers.">
             <IconButton onClick={toggleShowSearchServer}>
-              <Search />
+              <Badge color="error" variant="dot" invisible={!filtersApplied}>
+                <Search />
+              </Badge>
             </IconButton>
           </Tooltip>
         </Toolbar>

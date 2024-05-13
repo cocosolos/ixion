@@ -1,8 +1,9 @@
 import { Box } from '@mui/material';
+import { useEffect } from 'react';
 import ErrorCard from '../components/ErrorCard';
 import ServerCard from '../components/Server/ServerCard';
 import SettingsChipCloud from '../components/Server/SettingsChipCloud';
-import { SearchState } from '../data/SearchState';
+import { SearchState, SearchStateDefaults } from '../data/SearchState';
 import { ServerData } from '../data/ServerData';
 
 export default function Home({
@@ -12,6 +13,40 @@ export default function Home({
   servers: ServerData[];
   searchState: SearchState;
 }) {
+  function serializeSearchState(search: SearchState): string {
+    const params = new URLSearchParams();
+
+    Object.entries(search).forEach(([key, value]) => {
+      if (
+        value !== null &&
+        value !== undefined &&
+        !(key === 'name' && value === '') &&
+        !(
+          key === 'maxLevel' &&
+          JSON.stringify(value) === JSON.stringify(SearchStateDefaults.maxLevel)
+        )
+      ) {
+        if (Array.isArray(value)) {
+          params.append(key, value.join(','));
+        } else {
+          params.append(key, value);
+        }
+      }
+    });
+
+    return params.toString();
+  }
+
+  useEffect(() => {
+    // Update URL params whenever search state changes
+    const searchParams = serializeSearchState(searchState);
+    if (searchParams.length !== 0) {
+      window.history.replaceState({}, '', `?${searchParams}`);
+    } else {
+      window.history.replaceState({}, '', '/');
+    }
+  }, [searchState]);
+
   const filterServers = (server: ServerData): boolean => {
     // Name
     if (searchState.name.length > 0) {
@@ -92,12 +127,12 @@ export default function Home({
     }
     // Records of Eminence
     if (
-      searchState.recordsOfEminence &&
+      searchState.roe &&
       typeof server.settings_summary['MAIN.ENABLE_ROE'] === 'number'
     ) {
       const serverEnabled = server.settings_summary['MAIN.ENABLE_ROE'] === 1;
-      const searchEnabled = searchState.recordsOfEminence.includes('enabled');
-      const searchDisabled = searchState.recordsOfEminence.includes('disabled');
+      const searchEnabled = searchState.roe.includes('enabled');
+      const searchDisabled = searchState.roe.includes('disabled');
       if (
         (serverEnabled && searchDisabled && !searchEnabled) ||
         (!serverEnabled && searchEnabled && !searchDisabled)
@@ -107,13 +142,13 @@ export default function Home({
     }
     // Fields of Valor
     if (
-      searchState.fieldsOfValor &&
+      searchState.fov &&
       typeof server.settings_summary['MAIN.ENABLE_FIELD_MANUALS'] === 'number'
     ) {
       const serverEnabled =
         server.settings_summary['MAIN.ENABLE_FIELD_MANUALS'] === 1;
-      const searchEnabled = searchState.fieldsOfValor.includes('enabled');
-      const searchDisabled = searchState.fieldsOfValor.includes('disabled');
+      const searchEnabled = searchState.fov.includes('enabled');
+      const searchDisabled = searchState.fov.includes('disabled');
       if (
         (serverEnabled && searchDisabled && !searchEnabled) ||
         (!serverEnabled && searchEnabled && !searchDisabled)
@@ -123,13 +158,13 @@ export default function Home({
     }
     // Grounds of Valor
     if (
-      searchState.groundsOfValor &&
+      searchState.gov &&
       typeof server.settings_summary['MAIN.ENABLE_GROUNDS_TOMES'] === 'number'
     ) {
       const serverEnabled =
         server.settings_summary['MAIN.ENABLE_GROUNDS_TOMES'] === 1;
-      const searchEnabled = searchState.groundsOfValor.includes('enabled');
-      const searchDisabled = searchState.groundsOfValor.includes('disabled');
+      const searchEnabled = searchState.gov.includes('enabled');
+      const searchDisabled = searchState.gov.includes('disabled');
       if (
         (serverEnabled && searchDisabled && !searchEnabled) ||
         (!serverEnabled && searchEnabled && !searchDisabled)
@@ -138,12 +173,12 @@ export default function Home({
       }
     }
     // Expansions
-    if (searchState.expansions) {
+    if (searchState.expansionsEnabled) {
       if (!server.expansions) {
         return false;
       }
       if (
-        searchState.expansions.includes('none') &&
+        searchState.expansionsEnabled.includes('none') &&
         (server.expansions.rotz ||
           server.expansions.cop ||
           server.expansions.toau ||
@@ -152,19 +187,32 @@ export default function Home({
       ) {
         return false;
       }
-      if (searchState.expansions.includes('rotz') !== server.expansions.rotz) {
+      if (
+        searchState.expansionsEnabled.includes('rotz') !==
+        server.expansions.rotz
+      ) {
         return false;
       }
-      if (searchState.expansions.includes('cop') !== server.expansions.cop) {
+      if (
+        searchState.expansionsEnabled.includes('cop') !== server.expansions.cop
+      ) {
         return false;
       }
-      if (searchState.expansions.includes('toau') !== server.expansions.toau) {
+      if (
+        searchState.expansionsEnabled.includes('toau') !==
+        server.expansions.toau
+      ) {
         return false;
       }
-      if (searchState.expansions.includes('wotg') !== server.expansions.wotg) {
+      if (
+        searchState.expansionsEnabled.includes('wotg') !==
+        server.expansions.wotg
+      ) {
         return false;
       }
-      if (searchState.expansions.includes('soa') !== server.expansions.soa) {
+      if (
+        searchState.expansionsEnabled.includes('soa') !== server.expansions.soa
+      ) {
         return false;
       }
     }

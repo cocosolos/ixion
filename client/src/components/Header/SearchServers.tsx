@@ -13,6 +13,7 @@ import {
   Typography,
 } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import { SearchState, SearchStateDefaults } from '../../data/SearchState';
 
 type SearchServersProps = {
@@ -27,15 +28,51 @@ export default function SearchServers({
   setSearchState,
 }: SearchServersProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const location = useLocation();
+  const [initialPath] = useState(location.pathname);
   const [contentHeight, setContentHeight] = useState(0);
 
+  function parseSearchParams(searchParams: string): SearchState {
+    const params = new URLSearchParams(searchParams);
+    const parsedState = SearchStateDefaults;
+
+    const keys = Object.keys(SearchStateDefaults) as Array<keyof SearchState>;
+
+    keys.forEach((key) => {
+      if (params.has(key)) {
+        const value = params.get(key) as string;
+        const decodedValue = decodeURIComponent(value);
+
+        if (key === 'maxLevel') {
+          const maxLevelArray = decodedValue.split(',').map(Number);
+          parsedState[key] =
+            maxLevelArray.length === 1 ? [1, maxLevelArray[0]] : maxLevelArray;
+        } else if (key === 'expansionsEnabled') {
+          parsedState[key] = decodedValue.split(',') as string[];
+        } else {
+          parsedState[key] = decodedValue;
+        }
+      }
+    });
+
+    return parsedState as SearchState;
+  }
+
   useEffect(() => {
+    // Populate search state with URL params only if loading the home page
+    // Home page manages updating URL params
+    if (initialPath === '/') {
+      const params = parseSearchParams(location.search);
+      if (params !== SearchStateDefaults) {
+        setSearchState(params);
+      }
+    }
     if (showSearchServer && containerRef.current) {
       setContentHeight(containerRef.current.scrollHeight);
     } else {
       setContentHeight(0);
     }
-  }, [showSearchServer]);
+  }, [showSearchServer, location.search, setSearchState, initialPath]);
 
   const handleChange = (
     name: string,
@@ -67,24 +104,29 @@ export default function SearchServers({
     newSearchExpansions: string[]
   ) => {
     if (newSearchExpansions.length === 0) {
-      setSearchState({ ...searchState, expansions: null });
+      setSearchState({ ...searchState, expansionsEnabled: null });
     } else if (
-      searchState.expansions &&
-      searchState.expansions.includes('none') &&
+      searchState.expansionsEnabled &&
+      searchState.expansionsEnabled.includes('none') &&
       newSearchExpansions.length > 1
     ) {
       setSearchState({
         ...searchState,
-        expansions: newSearchExpansions.filter((item) => item !== 'none'),
+        expansionsEnabled: newSearchExpansions.filter(
+          (item) => item !== 'none'
+        ),
       });
     } else if (
-      searchState.expansions &&
-      !searchState.expansions.includes('none') &&
+      searchState.expansionsEnabled &&
+      !searchState.expansionsEnabled.includes('none') &&
       newSearchExpansions.includes('none')
     ) {
-      setSearchState({ ...searchState, expansions: ['none'] });
+      setSearchState({ ...searchState, expansionsEnabled: ['none'] });
     } else {
-      setSearchState({ ...searchState, expansions: newSearchExpansions });
+      setSearchState({
+        ...searchState,
+        expansionsEnabled: newSearchExpansions,
+      });
     }
   };
 
@@ -214,7 +256,7 @@ export default function SearchServers({
             </Typography>
           </Tooltip>
           <ToggleButtonGroup
-            value={searchState.expansions}
+            value={searchState.expansionsEnabled}
             onChange={handleSearchExpansions}
             size="small"
             aria-labelledby="expansions-button-group"
@@ -509,9 +551,9 @@ export default function SearchServers({
             Fields of Valor
           </Typography>
           <ToggleButtonGroup
-            value={searchState.fieldsOfValor}
+            value={searchState.fov}
             onChange={(_event, value) => {
-              handleChange('fieldsOfValor', value);
+              handleChange('fov', value);
             }}
             size="small"
             aria-labelledby="fields-of-valor-button-group"
@@ -551,9 +593,9 @@ export default function SearchServers({
             Grounds of Valor
           </Typography>
           <ToggleButtonGroup
-            value={searchState.groundsOfValor}
+            value={searchState.gov}
             onChange={(_event, value) => {
-              handleChange('groundsOfValor', value);
+              handleChange('gov', value);
             }}
             size="small"
             aria-labelledby="grounds-of-valor-button-group"
@@ -593,9 +635,9 @@ export default function SearchServers({
             Records of Eminence
           </Typography>
           <ToggleButtonGroup
-            value={searchState.recordsOfEminence}
+            value={searchState.roe}
             onChange={(_event, value) => {
-              handleChange('recordsOfEminence', value);
+              handleChange('roe', value);
             }}
             size="small"
             aria-labelledby="records-of-eminence-button-group"
@@ -648,6 +690,9 @@ export default function SearchServers({
             >
               <IconButton
                 onClick={() => {
+                  if (location.pathname === '/') {
+                    window.history.replaceState({}, '', '/');
+                  }
                   setSearchState(SearchStateDefaults);
                 }}
               >
