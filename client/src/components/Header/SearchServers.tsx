@@ -22,6 +22,32 @@ type SearchServersProps = {
   setSearchState: React.Dispatch<React.SetStateAction<SearchState>>;
 };
 
+function parseSearchParams(searchParams: string): SearchState {
+  const params = new URLSearchParams(searchParams);
+  const parsedState = { ...SearchStateDefaults };
+
+  const keys = Object.keys(SearchStateDefaults) as Array<keyof SearchState>;
+
+  keys.forEach((key) => {
+    if (params.has(key)) {
+      const value = params.get(key) as string;
+      const decodedValue = decodeURIComponent(value);
+
+      if (key === 'maxLevel') {
+        const maxLevelArray = decodedValue.split(' ').map(Number);
+        parsedState[key] =
+          maxLevelArray.length === 1 ? [1, maxLevelArray[0]] : maxLevelArray;
+      } else if (key === 'expansionsEnabled') {
+        parsedState[key] = decodedValue.split(' ') as string[];
+      } else {
+        parsedState[key] = decodedValue;
+      }
+    }
+  });
+
+  return parsedState as SearchState;
+}
+
 export default function SearchServers({
   showSearchServer,
   searchState,
@@ -31,48 +57,33 @@ export default function SearchServers({
   const location = useLocation();
   const [initialPath] = useState(location.pathname);
   const [contentHeight, setContentHeight] = useState(0);
-
-  function parseSearchParams(searchParams: string): SearchState {
-    const params = new URLSearchParams(searchParams);
-    const parsedState = SearchStateDefaults;
-
-    const keys = Object.keys(SearchStateDefaults) as Array<keyof SearchState>;
-
-    keys.forEach((key) => {
-      if (params.has(key)) {
-        const value = params.get(key) as string;
-        const decodedValue = decodeURIComponent(value);
-
-        if (key === 'maxLevel') {
-          const maxLevelArray = decodedValue.split(',').map(Number);
-          parsedState[key] =
-            maxLevelArray.length === 1 ? [1, maxLevelArray[0]] : maxLevelArray;
-        } else if (key === 'expansionsEnabled') {
-          parsedState[key] = decodedValue.split(',') as string[];
-        } else {
-          parsedState[key] = decodedValue;
-        }
-      }
-    });
-
-    return parsedState as SearchState;
-  }
+  const [initialLoad, setInitialLoad] = useState(true);
 
   useEffect(() => {
     // Populate search state with URL params only if loading the home page
     // Home page manages updating URL params
-    if (initialPath === '/') {
-      const params = parseSearchParams(location.search);
-      if (params !== SearchStateDefaults) {
-        setSearchState(params);
+    // TODO: Check if there's a better way to do this than "initialLoad" state, see also Header
+    if (initialLoad) {
+      if (initialPath === '/') {
+        const params = parseSearchParams(location.search);
+        if (JSON.stringify(params) !== JSON.stringify(SearchStateDefaults)) {
+          setSearchState(params);
+        }
       }
+      setInitialLoad(false);
     }
     if (showSearchServer && containerRef.current) {
       setContentHeight(containerRef.current.scrollHeight);
     } else {
       setContentHeight(0);
     }
-  }, [showSearchServer, location.search, setSearchState, initialPath]);
+  }, [
+    showSearchServer,
+    location.search,
+    setSearchState,
+    initialPath,
+    initialLoad,
+  ]);
 
   const handleChange = (
     name: string,
@@ -141,11 +152,11 @@ export default function SearchServers({
           theme.palette.mode === 'dark'
             ? 'rgba(255, 255, 255, .06)'
             : 'rgba(0, 0, 0, .06)',
-        boxShadow: 'inset 0em 3em 5em -5em black,inset 0em -3em 5em -6em black',
+        boxShadow: 'inset 0em 3em 5em -6em black,inset 0em -3em 5em -7em black',
       }}
     >
-      <Container>
-        <Grid container spacing={2} className="py-2">
+      <Container className="my-2">
+        <Grid container spacing={2}>
           {/* Name */}
           <Grid item xs={12}>
             <TextField
@@ -686,9 +697,6 @@ export default function SearchServers({
               >
                 <IconButton
                   onClick={() => {
-                    if (location.pathname === '/') {
-                      window.history.replaceState({}, '', '/');
-                    }
                     setSearchState(SearchStateDefaults);
                   }}
                 >

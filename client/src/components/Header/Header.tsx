@@ -38,7 +38,7 @@ export default function Header({
   const { progress, setProgress, showAlert } = useLoadingContext();
   const [showSearchServer, setShowSearchServer] = useState(false);
   const [filtersApplied, setFiltersApplied] = useState(false);
-  const [initialFetch, setInitialFetch] = useState(false);
+  const [initialFetch, setInitialFetch] = useState(true);
   const toggleShowSearchServer = () => {
     setShowSearchServer((prev) => !prev);
   };
@@ -69,9 +69,10 @@ export default function Header({
   }, [showAlert, setServers, setProgress]);
 
   useEffect(() => {
-    if (!initialFetch) {
+    // TODO: Check if there's a better way to do this than "initialFetch" state, see also SearchServers
+    if (initialFetch) {
       fetchServerData();
-      setInitialFetch(true);
+      setInitialFetch(false);
     }
     setFiltersApplied(
       JSON.stringify(searchState) !== JSON.stringify(SearchStateDefaults)

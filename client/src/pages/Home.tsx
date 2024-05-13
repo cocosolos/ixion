@@ -6,37 +6,42 @@ import SettingsChipCloud from '../components/Server/SettingsChipCloud';
 import { SearchState, SearchStateDefaults } from '../data/SearchState';
 import { ServerData } from '../data/ServerData';
 
-export default function Home({
-  servers,
-  searchState,
-}: {
+function serializeSearchState(search: SearchState): string {
+  const params = new URLSearchParams();
+
+  Object.entries(search).forEach(([key, value]) => {
+    if (
+      value !== null &&
+      value !== undefined &&
+      !(key === 'name' && value === SearchStateDefaults.name) &&
+      !(
+        key === 'maxLevel' &&
+        JSON.stringify(value) === JSON.stringify(SearchStateDefaults.maxLevel)
+      )
+    ) {
+      if (Array.isArray(value)) {
+        if (key === 'maxLevel') {
+          if (value[0] === value[1]) {
+            params.append(key, JSON.stringify(value[0]));
+            return;
+          }
+        }
+        params.append(key, value.join(' '));
+      } else {
+        params.append(key, value);
+      }
+    }
+  });
+
+  return params.toString();
+}
+
+type HomeProps = {
   servers: ServerData[];
   searchState: SearchState;
-}) {
-  function serializeSearchState(search: SearchState): string {
-    const params = new URLSearchParams();
+};
 
-    Object.entries(search).forEach(([key, value]) => {
-      if (
-        value !== null &&
-        value !== undefined &&
-        !(key === 'name' && value === '') &&
-        !(
-          key === 'maxLevel' &&
-          JSON.stringify(value) === JSON.stringify(SearchStateDefaults.maxLevel)
-        )
-      ) {
-        if (Array.isArray(value)) {
-          params.append(key, value.join(','));
-        } else {
-          params.append(key, value);
-        }
-      }
-    });
-
-    return params.toString();
-  }
-
+export default function Home({ servers, searchState }: HomeProps) {
   useEffect(() => {
     // Update URL params whenever search state changes
     const searchParams = serializeSearchState(searchState);
