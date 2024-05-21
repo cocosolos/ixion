@@ -9,6 +9,7 @@ import {
   Typography,
 } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
+import { useOnMount } from '@mui/x-data-grid';
 import { useCallback, useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { fetchDataFromBackend } from '../../apiUtil';
@@ -38,7 +39,6 @@ export default function Header({
   const { progress, setProgress, showAlert } = useLoadingContext();
   const [showSearchServer, setShowSearchServer] = useState(false);
   const [filtersApplied, setFiltersApplied] = useState(false);
-  const [initialFetch, setInitialFetch] = useState(true);
   const toggleShowSearchServer = () => {
     setShowSearchServer((prev) => !prev);
   };
@@ -68,16 +68,15 @@ export default function Header({
     }, 500);
   }, [showAlert, setServers, setProgress]);
 
+  useOnMount(() => {
+    fetchServerData();
+  });
+
   useEffect(() => {
-    // TODO: Check if there's a better way to do this than "initialFetch" state, see also SearchServers
-    if (initialFetch) {
-      fetchServerData();
-      setInitialFetch(false);
-    }
     setFiltersApplied(
       JSON.stringify(searchState) !== JSON.stringify(SearchStateDefaults)
     );
-  }, [initialFetch, fetchServerData, searchState]);
+  }, [searchState]);
 
   return (
     <Box>

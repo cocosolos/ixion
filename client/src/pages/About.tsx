@@ -54,17 +54,17 @@ MAIN.ENABLE_TVR`;
               variant="body1"
               color={(theme) => alpha(theme.palette.text.primary, 0.87)}
             >
-              Ixion is a catalog of Final Fantasy XI private servers running the{' '}
+              Ixion is a directory of public{' '}
               <Link
                 href="https://github.com/LandSandBoat/server"
                 target="_blank"
               >
                 LandSandBoat
               </Link>{' '}
-              software (or serving their API). Servers are updated every 10
-              minutes and are removed after a variable amount of
-              disconnectivity. All information is gathered directly from the
-              listed servers.
+              (LSB) servers. Servers are updated every 10 minutes and are
+              unlisted after a variable amount of disconnectivity proportional
+              to their time listed (maximum 24 hours). All information is
+              gathered directly from the listed servers.
             </Typography>
           </Box>
           <Box className="mb-3">
@@ -158,7 +158,7 @@ MAIN.ENABLE_TVR`;
                 <CodeCard title="api.lua" content={apiLua} />
                 The world server needs to be restarted after any changes to any
                 of the settings. If you set <b>DO_NOT_TRACK</b> to <b>true</b>,
-                your server will be removed on the next update.
+                your server will be unlisted on the next update.
               </Typography>
             </Box>
             <Box className="mb-3">
@@ -170,28 +170,10 @@ MAIN.ENABLE_TVR`;
                 variant="body1"
                 color={(theme) => alpha(theme.palette.text.primary, 0.87)}
               >
-                Anything that differs from the default LSB settings will be
-                displayed in the &quot;Settings Summary&quot; section for a
-                server. The following settings are always included as part of
-                the UI:
+                Any LSB settings that differ from the defaults will be displayed
+                in the &quot;Settings Summary&quot; section. The following
+                settings are always included as part of the UI:
                 <CodeCard title="Settings" content={recommendedSettings} />
-              </Typography>
-            </Box>
-            <Box className="mb-3">
-              <Typography align="center" variant="h6">
-                What if my server isn&apos;t running LSB?
-              </Typography>
-              <Typography
-                component="p"
-                variant="body1"
-                color={(theme) => alpha(theme.palette.text.primary, 0.87)}
-              >
-                If you&apos;re not running LSB, you could fake the API response.
-                You&apos;ll want to look at the LSB settings and serve whatever
-                relevant changes you&apos;ve made using the LSB equivalent, the
-                above listed settings at minimum. Settings should be served at{' '}
-                <b>/api/settings</b> and total active sessions should be served
-                at <b>/api/sessions</b>.
               </Typography>
             </Box>
           </AccordionDetails>

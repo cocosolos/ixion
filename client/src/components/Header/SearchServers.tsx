@@ -12,6 +12,7 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
+import { useOnMount } from '@mui/x-data-grid';
 import { useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { SearchState, SearchStateDefaults } from '../../data/SearchState';
@@ -57,33 +58,25 @@ export default function SearchServers({
   const location = useLocation();
   const [initialPath] = useState(location.pathname);
   const [contentHeight, setContentHeight] = useState(0);
-  const [initialLoad, setInitialLoad] = useState(true);
+
+  useOnMount(() => {
+    if (initialPath === '/') {
+      const params = parseSearchParams(location.search);
+      if (JSON.stringify(params) !== JSON.stringify(SearchStateDefaults)) {
+        setSearchState(params);
+      }
+    }
+  });
 
   useEffect(() => {
     // Populate search state with URL params only if loading the home page
     // Home page manages updating URL params
-    // TODO: Check if there's a better way to do this than "initialLoad" state, see also Header
-    if (initialLoad) {
-      if (initialPath === '/') {
-        const params = parseSearchParams(location.search);
-        if (JSON.stringify(params) !== JSON.stringify(SearchStateDefaults)) {
-          setSearchState(params);
-        }
-      }
-      setInitialLoad(false);
-    }
     if (showSearchServer && containerRef.current) {
       setContentHeight(containerRef.current.scrollHeight);
     } else {
       setContentHeight(0);
     }
-  }, [
-    showSearchServer,
-    location.search,
-    setSearchState,
-    initialPath,
-    initialLoad,
-  ]);
+  }, [showSearchServer]);
 
   const handleChange = (
     name: string,
