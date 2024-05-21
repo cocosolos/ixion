@@ -1269,6 +1269,17 @@ export const ServerSettingsInfo: Record<string, ServerSetting> = {
       return '???';
     },
   },
+  'MAP.CRAFT_HQ_CHANCE_MULTIPLIER': {
+    name: 'Craft HQ Rate',
+    description: '',
+    transform: (arg) => {
+      const numValue = Number(arg);
+      if (!Number.isNaN(numValue)) {
+        return `${numValue < 1 ? '' : '+'}${((numValue - 1) * 100).toFixed()}%`;
+      }
+      return '???';
+    },
+  },
   'MAP.CRAFT_MODERN_SYSTEM': {
     name: 'Original Crafting System',
     description: 'Uses original skill up rates and margins.',
@@ -1511,12 +1522,11 @@ export const ServerSettingsInfo: Record<string, ServerSetting> = {
   },
   'MAP.MOB_SPEED_MOD': {
     name: 'Mob Aggro Speed',
-    description:
-      'Modifier to apply to monster speed after aggro as a percentage of retail speed.',
+    description: '',
     transform: (arg) => {
       const numValue = Number(arg);
       if (!Number.isNaN(numValue)) {
-        return `${numValue < 0 ? '' : '+'}${(((50 + numValue) / 50 - 1) * 100).toFixed()}%`;
+        return `${numValue < 0 ? '' : '+'}${numValue}%`;
       }
       return '???';
     },
