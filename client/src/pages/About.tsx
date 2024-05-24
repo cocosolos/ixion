@@ -90,22 +90,22 @@ MAIN.ENABLE_TVR`;
               variant="body1"
               color={(theme) => alpha(theme.palette.text.primary, 0.87)}
             >
-              Additional servers and more detailed information can be found on
-              the{' '}
+              Additional servers, more detailed information, and discussion can
+              be found in the Final Fantasy XI Private Server Community on{' '}
               <Link
                 href="https://github.com/XiPrivateServers/Servers/blob/main/SERVERS.md"
                 target="_blank"
               >
-                XiPrivateServers GitHub
+                GitHub
               </Link>
-              . Discussion can be found on the{' '}
+              ,{' '}
               <Link
                 href="https://www.reddit.com/r/FFXIPrivateServers/"
                 target="_blank"
               >
-                subreddit
-              </Link>{' '}
-              or in the{' '}
+                Reddit
+              </Link>
+              , and{' '}
               <Link href="https://discord.gg/nYF6gNv" target="_blank">
                 Discord
               </Link>
