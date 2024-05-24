@@ -20,6 +20,7 @@ import {
   Tooltip,
   Typography,
   alpha,
+  useMediaQuery,
 } from '@mui/material';
 import {
   Children,
@@ -46,6 +47,7 @@ type ServerCardProps = {
 
 export default function ServerCard({ server, children }: ServerCardProps) {
   const { themeMode } = useThemeModeContext();
+  const isSmallScreen = useMediaQuery('(max-width:400px)');
   const [clipboardTooltip, setClipboardTooltip] = useState('Copy server URL.');
   const [clipboardTooltipOpen, setClipboardTooltipOpen] = useState(false);
   const handleClipboardTooltipClose = () => {
@@ -112,7 +114,7 @@ export default function ServerCard({ server, children }: ServerCardProps) {
   return (
     <Card className="mb-2" raised={themeMode === 'light'}>
       <Accordion
-        className="my-0"
+        className="my-0 min-w-fit"
         disableGutters
         elevation={0}
         square
@@ -186,7 +188,14 @@ export default function ServerCard({ server, children }: ServerCardProps) {
               </Tooltip>
             </Box>
           </Box>
-          <Box className="grow py-1 pl-4">
+          <Box
+            // className={
+            //   isSmallScreen
+            //     ? 'flex grow flex-col items-center justify-center py-1 pl-4'
+            //     : 'grow py-1 pl-4'
+            // }
+            className="grow py-1 pl-4"
+          >
             <Box className="flex content-center">
               <Typography
                 variant="h5"

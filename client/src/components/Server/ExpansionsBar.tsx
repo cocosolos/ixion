@@ -1,4 +1,10 @@
-import { Box, ToggleButton, ToggleButtonGroup, Tooltip } from '@mui/material';
+import {
+  Box,
+  ToggleButton,
+  ToggleButtonGroup,
+  Tooltip,
+  useMediaQuery,
+} from '@mui/material';
 import { ServerData } from '../../data/ServerData';
 
 const expansionButtons = [
@@ -47,12 +53,22 @@ const expansionButtons = [
   >
     SoA
   </ToggleButton>,
+  <ToggleButton
+    key="addons"
+    value="addons"
+    aria-label="addons-enabled"
+    className="py-0"
+    disabled
+  >
+    +
+  </ToggleButton>,
 ];
 
 type ExpansionBarProps = { server: ServerData };
 
 export default function ExpansionBar({ server }: ExpansionBarProps) {
   const { expansions } = server;
+  const isSmallScreen = useMediaQuery('(max-width:400px)');
 
   const addons = ['acp', 'amk', 'asa', 'abyssea', 'voidwatch', 'rov', 'tvr'];
   let enabledAddons = addons.filter((prop) => expansions[prop]);
@@ -79,6 +95,7 @@ export default function ExpansionBar({ server }: ExpansionBarProps) {
       >
         <ToggleButtonGroup
           size="small"
+          orientation={isSmallScreen ? 'vertical' : 'horizontal'}
           value={
             expansions && [
               expansions.rotz && 'rotz',
@@ -89,20 +106,13 @@ export default function ExpansionBar({ server }: ExpansionBarProps) {
               enabledAddons.length !== 0 && 'addons',
             ]
           }
-          sx={{ '& button': { maxHeight: '1rem' } }}
+          sx={{
+            '& button': {
+              maxHeight: '1rem',
+            },
+          }}
         >
           {expansionButtons}
-          {enabledAddons.length !== 0 && (
-            <ToggleButton
-              key="addons"
-              value="addons"
-              aria-label="addons-enabled"
-              className="py-0"
-              disabled
-            >
-              +
-            </ToggleButton>
-          )}
         </ToggleButtonGroup>
       </Tooltip>
     </Box>
