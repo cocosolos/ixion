@@ -59,32 +59,41 @@ export default function AddServer({ servers, setServers }: AddServerProps) {
     setShowAddServer((prev) => !prev);
   };
 
-  const handleSubmit = async (event: React.KeyboardEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (inputRef.current) {
       const inputText = inputRef.current.value;
       setIsLoading(true);
-      const response = await postData(inputText);
-      if (response.success) {
-        showAlert({
-          message: response.message,
-          severity: 'success',
-        });
-        if (response.data && typeof response.data === 'object') {
-          navigate(`/server/${encodeURIComponent(response.data.url)}`);
-          setServers([response.data, ...servers]);
-        }
-        if (inputRef.current) {
-          inputRef.current.value = '';
+      try {
+        const response = await postData(inputText);
+        if (response.success) {
+          showAlert({
+            message: response.message,
+            severity: 'success',
+          });
+          if (response.data && typeof response.data === 'object') {
+            navigate(`/server/${encodeURIComponent(response.data.url)}`);
+            setServers([response.data, ...servers]);
+          }
           toggleShowAddServer();
+          inputRef.current.value = '';
+        } else {
+          showAlert({
+            message: response.message || 'Failed to send data to backend.',
+            severity: 'error',
+          });
+          setTimeout(() => {
+            inputRef.current?.focus();
+          }, 0);
         }
-      } else {
+      } catch (error) {
         showAlert({
-          message: response.message || 'Failed to send data to backend.',
+          message: 'An error occurred during submission.',
           severity: 'error',
         });
+      } finally {
+        setIsLoading(false);
       }
-      setIsLoading(false);
     }
   };
 
@@ -93,7 +102,7 @@ export default function AddServer({ servers, setServers }: AddServerProps) {
       case 'Escape': {
         if (inputRef.current) {
           if (inputRef.current.value === '') {
-            toggleShowAddServer();
+            inputRef.current.blur();
           } else {
             inputRef.current.value = '';
           }
@@ -101,6 +110,12 @@ export default function AddServer({ servers, setServers }: AddServerProps) {
         break;
       }
       default:
+    }
+  };
+
+  const handleBlur = () => {
+    if (!isLoading && inputRef.current && inputRef.current.value === '') {
+      toggleShowAddServer();
     }
   };
 
@@ -123,6 +138,7 @@ export default function AddServer({ servers, setServers }: AddServerProps) {
                   'aria-label': 'add-server',
                 }}
                 onKeyUp={handleKeyUp}
+                onBlur={handleBlur}
                 disabled={isLoading}
                 endAdornment={
                   isLoading && (
