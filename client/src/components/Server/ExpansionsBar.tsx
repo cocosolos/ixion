@@ -1,10 +1,4 @@
-import {
-  Box,
-  ToggleButton,
-  ToggleButtonGroup,
-  Tooltip,
-  useMediaQuery,
-} from '@mui/material';
+import { Box, ToggleButton, ToggleButtonGroup, Tooltip } from '@mui/material';
 import { ServerData } from '../../data/ServerData';
 
 const expansionButtons = [
@@ -12,7 +6,7 @@ const expansionButtons = [
     key="rotz"
     value="rotz"
     aria-label="rotz-enabled"
-    className="py-0"
+    className="px-1 py-0"
     disabled
   >
     RotZ
@@ -21,7 +15,7 @@ const expansionButtons = [
     key="cop"
     value="cop"
     aria-label="cop-enabled"
-    className="py-0"
+    className="px-1 py-0"
     disabled
   >
     CoP
@@ -30,7 +24,7 @@ const expansionButtons = [
     key="toau"
     value="toau"
     aria-label="toau-enabled"
-    className="py-0"
+    className="px-1 py-0"
     disabled
   >
     ToAU
@@ -39,7 +33,7 @@ const expansionButtons = [
     key="wotg"
     value="wotg"
     aria-label="wotg-enabled"
-    className="py-0"
+    className="px-1 py-0"
     disabled
   >
     WotG
@@ -48,7 +42,7 @@ const expansionButtons = [
     key="soa"
     value="soa"
     aria-label="soa-enabled"
-    className="py-0"
+    className="px-1 py-0"
     disabled
   >
     SoA
@@ -57,7 +51,7 @@ const expansionButtons = [
     key="addons"
     value="addons"
     aria-label="addons-enabled"
-    className="py-0"
+    className="px-1 py-0"
     disabled
   >
     +
@@ -68,7 +62,6 @@ type ExpansionBarProps = { server: ServerData };
 
 export default function ExpansionBar({ server }: ExpansionBarProps) {
   const { expansions } = server;
-  const isSmallScreen = useMediaQuery('(max-width:400px)');
 
   const addons = ['acp', 'amk', 'asa', 'abyssea', 'voidwatch', 'rov', 'tvr'];
   let enabledAddons = addons.filter((prop) => expansions[prop]);
@@ -95,7 +88,6 @@ export default function ExpansionBar({ server }: ExpansionBarProps) {
       >
         <ToggleButtonGroup
           size="small"
-          orientation={isSmallScreen ? 'vertical' : 'horizontal'}
           value={
             expansions && [
               expansions.rotz && 'rotz',

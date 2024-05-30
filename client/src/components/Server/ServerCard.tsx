@@ -20,7 +20,6 @@ import {
   Tooltip,
   Typography,
   alpha,
-  useMediaQuery,
 } from '@mui/material';
 import {
   Children,
@@ -47,7 +46,6 @@ type ServerCardProps = {
 
 export default function ServerCard({ server, children }: ServerCardProps) {
   const { themeMode } = useThemeModeContext();
-  const isSmallScreen = useMediaQuery('(max-width:400px)');
   const [clipboardTooltip, setClipboardTooltip] = useState('Copy server URL.');
   const [clipboardTooltipOpen, setClipboardTooltipOpen] = useState(false);
   const handleClipboardTooltipClose = () => {
@@ -188,15 +186,8 @@ export default function ServerCard({ server, children }: ServerCardProps) {
               </Tooltip>
             </Box>
           </Box>
-          <Box
-            // className={
-            //   isSmallScreen
-            //     ? 'flex grow flex-col items-center justify-center py-1 pl-4'
-            //     : 'grow py-1 pl-4'
-            // }
-            className="grow py-1 pl-4"
-          >
-            <Box className="flex content-center">
+          <Box className="grow flex-col py-1 pl-4">
+            <Box className="flex">
               <Typography
                 variant="h5"
                 color={(theme) => alpha(theme.palette.text.primary, 0.87)}
@@ -231,7 +222,7 @@ export default function ServerCard({ server, children }: ServerCardProps) {
                   </Tooltip>
                 )}
             </Box>
-            <Box className="flex content-center">
+            <Box className="flex">
               <Typography
                 variant="subtitle2"
                 color={(theme) => alpha(theme.palette.text.primary, 0.6)}
@@ -267,16 +258,16 @@ export default function ServerCard({ server, children }: ServerCardProps) {
                   </IconButton>
                 </Tooltip>
               )}
+              <Typography
+                variant="h5"
+                className="flex grow justify-end"
+                sx={{ lineHeight: 1.0 }}
+                color={(theme) => theme.palette.text.secondary}
+              >
+                {`Lv.${server.max_level}`}
+              </Typography>
             </Box>
             <ExpansionBar server={server} />
-          </Box>
-          <Box className="flex items-center justify-center">
-            <Typography
-              variant="h5"
-              color={(theme) => theme.palette.text.secondary}
-            >
-              {`Lv.${server.max_level}`}
-            </Typography>
           </Box>
         </AccordionSummary>
         <AccordionDetails
@@ -343,7 +334,6 @@ export default function ServerCard({ server, children }: ServerCardProps) {
           )}
         </Box>
         <Box className="flex items-center whitespace-nowrap">
-          {/* <ServerDetailsModal id={server.id} /> */}
           <Typography variant="caption" sx={{ lineHeight: 1 }}>
             Updated: {new Date(server.updated).toLocaleString()}
           </Typography>
