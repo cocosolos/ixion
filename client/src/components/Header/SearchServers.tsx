@@ -69,8 +69,6 @@ export default function SearchServers({
   });
 
   useEffect(() => {
-    // Populate search state with URL params only if loading the home page
-    // Home page manages updating URL params
     if (showSearchServer && containerRef.current) {
       setContentHeight(containerRef.current.scrollHeight);
     } else {
@@ -140,7 +138,7 @@ export default function SearchServers({
       className="overflow-hidden"
       sx={{
         transition: 'all 0.3s ease',
-        maxHeight: showSearchServer ? contentHeight : 0,
+        maxHeight: contentHeight,
         backgroundColor: (theme) =>
           theme.palette.mode === 'dark'
             ? 'rgba(255, 255, 255, .06)'

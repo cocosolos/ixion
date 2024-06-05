@@ -9,7 +9,7 @@ import {
   alpha,
   styled,
 } from '@mui/material';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { postData } from '../../apiUtil';
 import { useLoadingContext } from '../../context/LoadingContext';
@@ -25,10 +25,6 @@ const AddServerInput = styled('div')(({ theme }) => ({
   marginRight: theme.spacing(2),
   marginLeft: 0,
   width: '100%',
-  [theme.breakpoints.up('sm')]: {
-    marginLeft: theme.spacing(3),
-    width: 'auto',
-  },
 }));
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
@@ -36,10 +32,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   '& .MuiInputBase-input': {
     padding: theme.spacing(1, 1, 1, 1),
     transition: theme.transitions.create('width'),
-    width: '100%',
-    [theme.breakpoints.up('md')]: {
-      width: '20ch',
-    },
+    width: '25ch',
   },
 }));
 
@@ -55,9 +48,18 @@ export default function AddServer({ servers, setServers }: AddServerProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [showAddServer, setShowAddServer] = useState(false);
+  const [inputWidth, setInputWidth] = useState(0);
   const toggleShowAddServer = () => {
     setShowAddServer((prev) => !prev);
   };
+
+  useEffect(() => {
+    if (showAddServer && containerRef.current) {
+      setInputWidth(containerRef.current.scrollWidth);
+    } else {
+      setInputWidth(0);
+    }
+  }, [showAddServer]);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -121,9 +123,32 @@ export default function AddServer({ servers, setServers }: AddServerProps) {
 
   return (
     <>
-      <Box ref={containerRef} className="overflow-hidden pl-4">
+      <Tooltip title="Add a server." arrow disableInteractive>
+        <IconButton
+          disabled={showAddServer}
+          onClick={() => {
+            toggleShowAddServer();
+            setTimeout(() => {
+              if (inputRef.current) {
+                inputRef.current.focus();
+              }
+            }, 300);
+          }}
+        >
+          <Add />
+        </IconButton>
+      </Tooltip>
+      <Box
+        ref={containerRef}
+        className="overflow-hidden"
+        sx={{
+          transition: 'all 0.2s ease',
+          maxWidth: inputWidth,
+        }}
+      >
         <Slide
           in={showAddServer}
+          className="mx-0"
           direction="left"
           container={containerRef.current}
         >
@@ -157,20 +182,6 @@ export default function AddServer({ servers, setServers }: AddServerProps) {
           </AddServerInput>
         </Slide>
       </Box>
-      <Tooltip title="Add a server." arrow disableInteractive>
-        <IconButton
-          onClick={() => {
-            toggleShowAddServer();
-            setTimeout(() => {
-              if (inputRef.current) {
-                inputRef.current.focus();
-              }
-            }, 300);
-          }}
-        >
-          <Add />
-        </IconButton>
-      </Tooltip>
     </>
   );
 }
