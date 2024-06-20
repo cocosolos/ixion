@@ -29,7 +29,6 @@ app.conf.beat_schedule = {
         "schedule": timedelta(
             minutes=int(os.getenv("SERVER_UPDATE_INTERVAL", default="10"))
         ),
-        # "schedule": timedelta(minutes=1),
     },
 }
 
